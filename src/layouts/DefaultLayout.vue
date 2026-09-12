@@ -38,7 +38,9 @@ function handleLogout() {
 
           <!-- Seção de Usuário / Auth -->
           <template v-if="authStore.isAuthenticated">
-            <span class="user-info">👤 {{ authStore.userName }}</span>
+            <RouterLink to="/profile" class="nav-link user-profile-link">
+              👤 {{ authStore.userName }}
+            </RouterLink>
             <button type="button" class="logout-btn" @click="handleLogout">Sair</button>
           </template>
           <template v-else>
@@ -53,7 +55,7 @@ function handleLogout() {
     </main>
 
     <footer class="footer">
-      <p>BaseFront Template &copy; {{ new Date().getFullYear() }} - Vue 3 + Pinia + TypeScript</p>
+      <p>Taliberti &copy; {{ new Date().getFullYear() }}</p>
     </footer>
   </div>
 </template>

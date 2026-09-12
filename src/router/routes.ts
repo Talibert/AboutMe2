@@ -20,6 +20,16 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/ProfileView.vue'),
+    meta: {
+      title: 'Meu Perfil',
+      layout: 'default',
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/LoginView.vue'),

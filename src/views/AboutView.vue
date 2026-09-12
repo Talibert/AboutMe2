@@ -2,16 +2,16 @@
   <div class="about-view">
     <h1>Sobre o Template</h1>
     <p>
-      Este template foi concebido para acelerar o desenvolvimento de projetos Vue 3,
-      fornecendo configurações padrão testadas e preparadas para escalabilidade.
+      A ideia desse template é facilitar o desenvolvimento das minhas aplicações em Vue.
+      Ele já está configurado para trabalhar com rotas, estados e testes.
     </p>
 
     <div class="info-card">
       <h3>Stack Tecnológica</h3>
       <ul>
-        <li><strong>Framework:</strong> Vue 3 (Composition API com script setup)</li>
+        <li><strong>Framework:</strong> Vue 3</li>
         <li><strong>Bundler:</strong> Vite</li>
-        <li><strong>Tipagem:</strong> TypeScript (modo strict)</li>
+        <li><strong>Tipagem:</strong> TypeScript</li>
         <li><strong>Roteamento:</strong> Vue Router 4 com layouts dinâmicos</li>
       </ul>
     </div>

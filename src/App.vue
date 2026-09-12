@@ -14,7 +14,10 @@ const layouts = {
   blank: BlankLayout,
 }
 
-// Layout computado com fallback automático para 'default'
+/**
+ * Layout computado com fallback automático para 'default'.
+ * Sempre que a rota mudar, vamos tentar obter o layout dela.
+ */
 const currentLayout = computed(() => {
   const layoutKey = route.meta.layout || 'default'
   return layouts[layoutKey] || DefaultLayout
