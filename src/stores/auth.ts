@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { User } from '@/types/auth'
+import authService from '@/api/authService'
+import type { User, LoginCredentials } from '@/types/auth'
 
 export const useAuthStore = defineStore(
   'auth',
@@ -14,27 +15,26 @@ export const useAuthStore = defineStore(
     const userName = computed(() => user.value?.name ?? 'Usuário')
 
     // Actions (functions)
-    async function login(email: string): Promise<void> {
+    async function login(credentials: LoginCredentials | string): Promise<void> {
       isLoading.value = true
       try {
-        // Simulação de requisição à API
-        await new Promise((resolve) => setTimeout(resolve, 600))
+        const creds = typeof credentials === 'string' ? { email: credentials } : credentials
+        const response = await authService.login(creds)
 
-        token.value = `mock_jwt_token_${Date.now()}`
-        user.value = {
-          id: 'user_1',
-          name: email.split('@')[0] ?? 'Usuário BaseFront',
-          email,
-          role: 'admin',
-        }
+        token.value = response.token
+        user.value = response.user
       } finally {
         isLoading.value = false
       }
     }
 
-    function logout(): void {
-      token.value = null
-      user.value = null
+    async function logout(): Promise<void> {
+      try {
+        await authService.logout()
+      } finally {
+        token.value = null
+        user.value = null
+      }
     }
 
     return {

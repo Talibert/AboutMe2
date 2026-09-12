@@ -11,7 +11,10 @@ const email = ref('admin@basefront.dev')
 const password = ref('123456')
 
 async function handleLogin() {
-  await authStore.login(email.value)
+  await authStore.login({
+    email: email.value,
+    password: password.value,
+  })
   const redirectPath = (route.query.redirect as string) || '/'
   router.push(redirectPath)
 }
