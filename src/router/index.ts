@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,15 +20,15 @@ router.beforeEach((to, _from, next) => {
   next()
 })
 
-// Navigation Guard: Exemplo de verificação de autenticação
+// Navigation Guard: Verificação de autenticação com a Store Pinia
 router.beforeEach((to, _from, next) => {
-  const isAuthenticated = Boolean(localStorage.getItem('token'))
+  const authStore = useAuthStore()
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return next({ name: 'login', query: { redirect: to.fullPath } })
   }
 
-  if (to.name === 'login' && isAuthenticated) {
+  if (to.name === 'login' && authStore.isAuthenticated) {
     return next({ name: 'home' })
   }
 

@@ -1,37 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const counter = ref(0)
 </script>
 
 <template>
   <div class="home-view">
     <section class="hero">
-      <div class="badge">Vue 3 + Vite + TypeScript</div>
+      <div class="badge">Vue 3 + Vite + TypeScript + Pinia</div>
       <h1 class="hero-title">Template Basefront</h1>
       <p class="hero-subtitle">
         Template profissional pronto para escalar suas aplicações Vue 3 com arquitetura limpa,
-        roteamento dinâmico e tipagem estrita.
+        roteamento dinâmico, estado global e tipagem estrita.
       </p>
     </section>
 
     <section class="features-grid">
       <div class="card">
+        <div class="card-icon">🍍</div>
+        <h3>Pinia & Persistência</h3>
+        <p>Gerenciamento de estado modular com suporte nativo a TypeScript e persistência em localStorage.</p>
+      </div>
+
+      <div class="card">
         <div class="card-icon">🧭</div>
         <h3>Vue Router & Layouts</h3>
-        <p>Sistema de layouts intercambiáveis (Default, Auth, Blank) e navegação com tipagem estrita.</p>
+        <p>Sistema de layouts intercambiáveis (Default, Auth, Blank) e navegação com guardas de rota.</p>
       </div>
 
       <div class="card">
         <div class="card-icon">⚡</div>
         <h3>Vite & Performance</h3>
         <p>Hot Module Replacement (HMR) instantâneo e bundling otimizado para produção.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">🛡️</div>
-        <h3>TypeScript First</h3>
-        <p>Verificação estrita de tipos em toda a aplicação com suporte a `vue-tsc`.</p>
       </div>
 
       <div class="card">
@@ -42,8 +44,19 @@ const counter = ref(0)
     </section>
 
     <section class="interactive-demo">
-      <h3>Teste de Reatividade</h3>
-      <p>Contador simples para demonstrar o `ref` da Composition API:</p>
+      <h3>Estado Global (Pinia)</h3>
+      <div v-if="authStore.isAuthenticated" class="auth-status logged-in">
+        <p>🟢 Logado como <strong>{{ authStore.user?.name }}</strong> ({{ authStore.user?.email }})</p>
+        <button class="btn-sm btn-danger" @click="authStore.logout">Desconectar</button>
+      </div>
+      <div v-else class="auth-status logged-out">
+        <p>⚪ Nenhum usuário autenticado no momento. Acesse a tela de Login para testar a persistência!</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>Reatividade Local</h3>
+      <p class="demo-sub">Contador simples gerenciado via <code>ref()</code>:</p>
       <div class="counter-box">
         <button class="btn btn-secondary" @click="counter--">-</button>
         <span class="counter-value">{{ counter }}</span>
@@ -135,7 +148,7 @@ const counter = ref(0)
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 2rem;
-  max-width: 500px;
+  max-width: 520px;
   margin: 0 auto;
   width: 100%;
 }
@@ -146,10 +159,29 @@ const counter = ref(0)
   margin-bottom: 0.5rem;
 }
 
-.interactive-demo p {
+.auth-status {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   font-size: 0.9rem;
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 1.5rem 0;
+}
+
+.demo-sub {
+  font-size: 0.875rem;
   opacity: 0.8;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .counter-box {
@@ -189,6 +221,23 @@ const counter = ref(0)
 }
 
 .btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: #fff;
+  border: none;
+}
+
+.btn-danger:hover {
   opacity: 0.9;
 }
 </style>

@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
-const email = ref('')
-const password = ref('')
-const isLoading = ref(false)
+const email = ref('admin@basefront.dev')
+const password = ref('123456')
 
-function handleLogin() {
-  isLoading.value = true
-
-  // Simulação de login para fins de teste no template
-  setTimeout(() => {
-    localStorage.setItem('token', 'mock-token-basefront')
-    isLoading.value = false
-
-    const redirectPath = (route.query.redirect as string) || '/'
-    router.push(redirectPath)
-  }, 600)
+async function handleLogin() {
+  await authStore.login(email.value)
+  const redirectPath = (route.query.redirect as string) || '/'
+  router.push(redirectPath)
 }
 </script>
 
@@ -55,8 +49,8 @@ function handleLogin() {
         />
       </div>
 
-      <button type="submit" class="submit-btn" :disabled="isLoading">
-        <span v-if="isLoading">Entrando...</span>
+      <button type="submit" class="submit-btn" :disabled="authStore.isLoading">
+        <span v-if="authStore.isLoading">Entrando...</span>
         <span v-else>Entrar</span>
       </button>
     </form>
