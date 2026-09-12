@@ -16,6 +16,13 @@ export const useThemeStore = defineStore(
       return mode.value === 'dark'
     })
 
+    function applyTheme(): void {
+      if (typeof document === 'undefined') return
+      const dark = isDark.value
+      document.documentElement.classList.toggle('dark', dark)
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+    }
+
     function setTheme(newMode: ThemeMode): void {
       mode.value = newMode
       applyTheme()
@@ -25,11 +32,17 @@ export const useThemeStore = defineStore(
       setTheme(isDark.value ? 'light' : 'dark')
     }
 
-    function applyTheme(): void {
-      if (typeof document === 'undefined') return
-      const dark = isDark.value
-      document.documentElement.classList.toggle('dark', dark)
-      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+    function initTheme(): void {
+      applyTheme()
+
+      if (typeof window !== 'undefined') {
+        const media = window.matchMedia('(prefers-color-scheme: dark)')
+        media.addEventListener('change', () => {
+          if (mode.value === 'system') {
+            applyTheme()
+          }
+        })
+      }
     }
 
     return {
@@ -38,6 +51,7 @@ export const useThemeStore = defineStore(
       setTheme,
       toggleTheme,
       applyTheme,
+      initTheme,
     }
   },
   {
