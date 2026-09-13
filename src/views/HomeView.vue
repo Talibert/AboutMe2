@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import GitHubProfileCard from '@/components/common/GitHubProfileCard.vue'
 
 const authStore = useAuthStore()
 const counter = ref(0)
@@ -81,6 +82,15 @@ const counter = ref(0)
         <button class="btn btn-primary" @click="counter++">+</button>
       </div>
     </section>
+
+    <!-- Seção do Criador / Demonstração de API Externa -->
+    <section class="github-section">
+      <div class="section-title">
+        <h3>Criador do Template</h3>
+        <p>Exemplo de consumo de API externa com Axios limpo</p>
+      </div>
+      <GitHubProfileCard username="Talibert" />
+    </section>
   </div>
 </template>
 
@@ -89,6 +99,29 @@ const counter = ref(0)
   display: flex;
   flex-direction: column;
   gap: 3rem;
+}
+
+.github-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-title {
+  text-align: center;
+}
+
+.section-title h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.section-title p {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  opacity: 0.75;
 }
 
 .hero {

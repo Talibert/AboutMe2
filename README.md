@@ -25,14 +25,15 @@ A estrutura dentro de `src/` segue princípios de responsabilidade única e esca
 ```text
 src/
 ├── api/                  # Camada de rede e comunicação HTTP
-│   ├── client.ts         # Instância centralizada do Axios com interceptors
-│   └── authService.ts    # Serviços de autenticação (login, logout, perfil)
+│   ├── client.ts         # Instância centralizada do Axios com interceptors (backend próprio)
+│   ├── authService.ts    # Serviços de autenticação (login, logout, perfil)
+│   └── githubService.ts  # Exemplo de consumo de API externa (Axios limpo sem interceptors)
 ├── assets/               # Recursos estáticos globais e estilos
 │   ├── base.css          # Reset de CSS e variáveis de cores (temas claro/escuro)
 │   ├── main.css          # Estilos globais e regras de transição de tela
 │   └── logo.svg          # Logotipo vetorial da aplicação
 ├── components/           # Componentes reutilizáveis
-│   ├── common/           # Elementos genéricos da interface (botões, inputs, modais)
+│   ├── common/           # Elementos da interface (GitHubProfileCard, botões, modais)
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
 ├── layouts/              # Cascas visuais intercambiáveis
@@ -49,6 +50,7 @@ src/
 ├── types/                # Definições de interfaces e modelos TypeScript
 │   ├── api.ts            # Tipagens de respostas e erros HTTP genéricos
 │   ├── auth.ts           # Interfaces de User, LoginCredentials e AuthResponse
+│   ├── github.ts         # Modelo da resposta da API pública do GitHub
 │   └── router.d.ts       # Extensão de tipos dos metadados de rotas (RouteMeta)
 ├── utils/                # Funções utilitárias puras (formatadores, máscaras, datas)
 ├── views/                # Páginas/Telas associadas às rotas
