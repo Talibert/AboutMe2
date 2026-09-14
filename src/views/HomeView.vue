@@ -19,6 +19,11 @@ const counter = ref(0)
       </p>
     </section>
 
+    <!-- Seção do Criador / Demonstração de API Externa -->
+    <section class="github-section">
+      <GitHubProfileCard username="Talibert" />
+    </section>
+
     <section class="features-grid">
       <div class="card">
         <div class="card-icon">🍍</div>
@@ -83,14 +88,6 @@ const counter = ref(0)
       </div>
     </section>
 
-    <!-- Seção do Criador / Demonstração de API Externa -->
-    <section class="github-section">
-      <div class="section-title">
-        <h3>Criador do Template</h3>
-        <p>Exemplo de consumo de API externa com Axios limpo</p>
-      </div>
-      <GitHubProfileCard username="Talibert" />
-    </section>
   </div>
 </template>
 
