@@ -33,7 +33,7 @@ src/
 │   ├── main.css          # Estilos globais e regras de transição de tela
 │   └── logo.svg          # Logotipo vetorial da aplicação
 ├── components/           # Componentes reutilizáveis
-│   ├── common/           # Elementos da interface (GitHubProfileCard, botões, modais)
+│   ├── common/           # Elementos da interface (FeatureCarousel, GitHubProfileCard, botões)
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
 ├── layouts/              # Cascas visuais intercambiáveis

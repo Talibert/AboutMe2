@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import GitHubProfileCard from '@/components/common/GitHubProfileCard.vue'
+import FeatureCarousel from '@/components/common/FeatureCarousel.vue'
 
 const authStore = useAuthStore()
 const counter = ref(0)
@@ -24,31 +25,11 @@ const counter = ref(0)
       <GitHubProfileCard username="Talibert" />
     </section>
 
-    <section class="features-grid">
-      <div class="card">
-        <div class="card-icon">🍍</div>
-        <h3>Pinia & Persistência</h3>
-        <p>Gerenciamento de estado modular com suporte nativo a TypeScript e persistência em localStorage.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">🧭</div>
-        <h3>Vue Router & Layouts</h3>
-        <p>Sistema de layouts intercambiáveis (Default, Auth, Blank) e navegação com guardas de rota.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>Vite & Performance</h3>
-        <p>Hot Module Replacement (HMR) instantâneo e bundling otimizado para produção.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">📁</div>
-        <h3>Arquitetura Limpa</h3>
-        <p>Separação clara de responsabilidades: api, components, composables, stores e utils.</p>
-      </div>
+    <!-- Carrossel de Recursos da Aplicação -->
+    <section class="features-carousel-section">
+      <FeatureCarousel />
     </section>
+
 
     <section class="interactive-demo">
       <h3>Estado Global (Pinia)</h3>
@@ -152,42 +133,8 @@ const counter = ref(0)
   opacity: 0.85;
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
-.card {
-  background-color: var(--color-background-soft);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  border-color: hsla(160, 100%, 37%, 0.5);
-}
-
-.card-icon {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-.card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-heading);
-  margin-bottom: 0.5rem;
-}
-
-.card p {
-  font-size: 0.9rem;
-  color: var(--color-text);
-  opacity: 0.8;
-  line-height: 1.5;
+.features-carousel-section {
+  width: 100%;
 }
 
 .interactive-demo {
