@@ -15,6 +15,9 @@ Projetado para servir como alicerce arquitetural para qualquer nova aplicação 
 * **[Pinia](https://pinia.vuejs.org/)** — Gerenciador de estado global oficial do Vue 3, estruturado no padrão moderno de *Setup Stores*.
 * **[pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/)** — Sincronização e persistência seletiva de estado no `localStorage`.
 * **[Axios](https://axios-http.com/)** — Cliente HTTP centralizado com interceptors de token e tratamento unificado de erros.
+* **[Vitest](https://vitest.dev/)** — Framework de testes unitários e de componentes de alta performance integrado nativamente ao Vite.
+* **[@vue/test-utils](https://test-utils.vuejs.org/)** — Biblioteca oficial de utilitários para montagem e testes de componentes Vue 3.
+* **[happy-dom](https://github.com/capricorn86/happy-dom)** — Emulação leve e ultrarrápida do ambiente DOM para execução ágil de testes.
 
 ---
 
@@ -35,6 +38,7 @@ src/
 │   └── logo.svg          # Logotipo vetorial da aplicação
 ├── components/           # Componentes reutilizáveis
 │   ├── common/           # Elementos da interface (BaseCarousel, GitHubProfileCard, botões)
+│   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
 ├── layouts/              # Cascas visuais intercambiáveis
@@ -170,6 +174,8 @@ Consulte o arquivo [`.env.example`](file:///Users/taliberti/Development/Personal
 | `npm run build` | Executa a checagem de tipos (`vue-tsc`) e gera o bundle de produção na pasta `dist/` |
 | `npm run preview` | Inicia um servidor local para testar o resultado do build de produção |
 | `npm run type-check` | Executa apenas a verificação estrita de tipos do TypeScript sem gerar arquivos |
+| `npm run test` | Executa a suíte de testes unitários e de componentes com o Vitest |
+| `npm run test:watch` | Executa o Vitest em modo interativo (reexecuta testes instantaneamente ao salvar arquivos) |
 
 ---
 
@@ -287,6 +293,35 @@ Quando o seu servidor backend estiver pronto:
    ```
 
 A partir desse momento, todas as chamadas de login e requisições passarão a se comunicar com seu servidor real através da internet, injetando cabeçalhos de autenticação e tratando respostas 401 automaticamente.
+
+---
+
+### 5. Como Criar e Executar Testes de Componentes
+
+Os testes são implementados utilizando **Vitest** e **@vue/test-utils** com emulação de DOM via **happy-dom**:
+
+1. Crie o arquivo `.spec.ts` na pasta `__tests__/` ao lado do componente (ex: `src/components/common/__tests__/MeuComponente.spec.ts`):
+   ```typescript
+   import { describe, it, expect, vi } from 'vitest'
+   import { mount, flushPromises } from '@vue/test-utils'
+   import MeuComponente from '../MeuComponente.vue'
+
+   describe('MeuComponente.vue', () => {
+     it('deve renderizar o título passado por prop', () => {
+       const wrapper = mount(MeuComponente, {
+         props: { title: 'Olá Mundo' }
+       })
+
+       expect(wrapper.text()).toContain('Olá Mundo')
+     })
+   })
+   ```
+
+2. Execute os testes no terminal:
+   ```bash
+   npm run test        # Executa todos os testes e exibe o relatório
+   npm run test:watch  # Modo contínuo (reexecuta instantaneamente ao salvar arquivos)
+   ```
 
 ---
 

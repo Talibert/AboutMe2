@@ -54,6 +54,15 @@ const MOCK_FEATURES: TechItem[] = [
     highlights: ['Request Interceptors', 'Auto-logout em 401', 'Modo Mock desacoplado'],
   },
   {
+    id: 'vitest',
+    icon: '🧪',
+    badge: 'Qualidade & Testes',
+    title: 'Vitest & Vue Test Utils',
+    description:
+      'Suíte de testes de componentes ultrarrápida integrada nativamente ao Vite, com execução em tempo real (watch) e emulação de DOM via happy-dom.',
+    highlights: ['Testes de Componentes', 'Mocks Nativos (vi.mock)', 'Ambiente Happy-DOM'],
+  },
+  {
     id: 'architecture',
     icon: '📁',
     badge: 'Escalabilidade',
