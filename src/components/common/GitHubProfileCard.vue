@@ -36,11 +36,41 @@ onMounted(() => {
 
 <template>
   <div class="github-card">
-    <!-- Estado: Carregando -->
-    <div v-if="isLoading" class="state-loading">
-      <div class="spinner"></div>
-      <p>Buscando perfil de @{{ username }} no GitHub...</p>
+    <!-- Estado: Carregando (Skeleton Placeholder Shimmer) -->
+    <div v-if="isLoading" class="skeleton-card">
+      <!-- Cabeçalho Skeleton -->
+      <div class="card-header">
+        <div class="skeleton-shimmer skeleton-avatar"></div>
+        <div class="user-titles">
+          <div class="name-row">
+            <div class="skeleton-shimmer skeleton-title"></div>
+            <div class="skeleton-shimmer skeleton-badge"></div>
+          </div>
+          <div class="skeleton-shimmer skeleton-handle"></div>
+        </div>
+      </div>
+
+      <!-- Bio Skeleton -->
+      <div class="skeleton-shimmer skeleton-bio"></div>
+
+      <!-- Metadados Chips Skeleton -->
+      <div class="meta-chips">
+        <div class="skeleton-shimmer skeleton-chip"></div>
+        <div class="skeleton-shimmer skeleton-chip skeleton-chip--wide"></div>
+        <div class="skeleton-shimmer skeleton-chip"></div>
+      </div>
+
+      <!-- Estatísticas Skeleton -->
+      <div class="stats-grid">
+        <div class="skeleton-shimmer skeleton-stat"></div>
+        <div class="skeleton-shimmer skeleton-stat"></div>
+        <div class="skeleton-shimmer skeleton-stat"></div>
+      </div>
+
+      <!-- Botão Skeleton -->
+      <div class="skeleton-shimmer skeleton-btn"></div>
     </div>
+
 
     <!-- Estado: Erro -->
     <div v-else-if="errorMessage" class="state-error">
@@ -144,7 +174,6 @@ onMounted(() => {
 }
 
 /* Estados */
-.state-loading,
 .state-error {
   display: flex;
   flex-direction: column;
@@ -155,21 +184,6 @@ onMounted(() => {
   text-align: center;
   color: var(--color-text);
   opacity: 0.85;
-}
-
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--color-border);
-  border-top-color: hsla(160, 100%, 37%, 1);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .retry-btn {
@@ -184,6 +198,85 @@ onMounted(() => {
 
 .retry-btn:hover {
   border-color: hsla(160, 100%, 37%, 1);
+}
+
+/* Skeleton Loading com animação Shimmer (padrão BaseCarousel) */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 25%,
+    var(--color-background) 50%,
+    var(--color-border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-title {
+  width: 140px;
+  height: 22px;
+}
+
+.skeleton-badge {
+  width: 95px;
+  height: 18px;
+  border-radius: 9999px;
+}
+
+.skeleton-handle {
+  width: 90px;
+  height: 14px;
+  margin-top: 4px;
+}
+
+.skeleton-bio {
+  width: 100%;
+  height: 48px;
+  border-radius: 0 8px 8px 0;
+}
+
+.skeleton-chip {
+  width: 90px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.skeleton-chip--wide {
+  width: 120px;
+}
+
+.skeleton-stat {
+  height: 62px;
+  border-radius: 10px;
+}
+
+.skeleton-btn {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
 }
 
 /* Conteúdo */

@@ -70,8 +70,7 @@ export const techService = {
    */
   async getItens(): Promise<TechItem[]> {
     if (import.meta.env.VITE_USE_MOCK_API === 'true') {
-      // Simula 400ms de latência de rede realista
-      await new Promise((resolve) => setTimeout(resolve, 400))
+      await new Promise((resolve) => setTimeout(resolve, 5000))
       return [...MOCK_FEATURES]
     }
 
