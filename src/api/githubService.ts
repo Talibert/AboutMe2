@@ -18,7 +18,7 @@ export const githubService = {
    * @param username Nome de usuário no GitHub
    */
   async getUserProfile(username: string): Promise<GitHubUser> {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     const response = await axios.get<GitHubUser>(`https://api.github.com/users/${username}`, {
       headers: {
         Accept: 'application/vnd.github.v3+json',

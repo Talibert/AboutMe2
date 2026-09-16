@@ -79,7 +79,7 @@ export const techService = {
    */
   async getItens(): Promise<TechItem[]> {
     if (import.meta.env.VITE_USE_MOCK_API === 'true') {
-      await new Promise((resolve) => setTimeout(resolve, 5000))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       return [...MOCK_FEATURES]
     }
 
