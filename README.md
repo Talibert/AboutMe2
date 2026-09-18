@@ -18,6 +18,7 @@ Projetado para servir como alicerce arquitetural para qualquer nova aplicação 
 * **[Vitest](https://vitest.dev/)** — Framework de testes unitários e de componentes de alta performance integrado nativamente ao Vite.
 * **[@vue/test-utils](https://test-utils.vuejs.org/)** — Biblioteca oficial de utilitários para montagem e testes de componentes Vue 3.
 * **[happy-dom](https://github.com/capricorn86/happy-dom)** — Emulação leve e ultrarrápida do ambiente DOM para execução ágil de testes.
+* **[Playwright](https://playwright.dev/)** — Framework moderno para testes End-to-End (E2E) com suporte a múltiplos navegadores, execução paralela e modo interativo (UI/Codegen).
 
 ---
 
@@ -176,6 +177,8 @@ Consulte o arquivo [`.env.example`](file:///Users/taliberti/Development/Personal
 | `npm run type-check` | Executa apenas a verificação estrita de tipos do TypeScript sem gerar arquivos |
 | `npm run test` | Executa a suíte de testes unitários e de componentes com o Vitest |
 | `npm run test:watch` | Executa o Vitest em modo interativo (reexecuta testes instantaneamente ao salvar arquivos) |
+| `npm run test:e2e` | Executa os testes de ponta a ponta (E2E) com o Playwright em modo headless |
+| `npm run test:e2e:ui` | Abre a interface gráfica interativa (UI Mode) do Playwright para inspeção e depuração visual |
 
 ---
 
@@ -322,6 +325,38 @@ Os testes são implementados utilizando **Vitest** e **@vue/test-utils** com emu
    npm run test        # Executa todos os testes e exibe o relatório
    npm run test:watch  # Modo contínuo (reexecuta instantaneamente ao salvar arquivos)
    ```
+
+---
+
+### 6. Como Criar e Executar Testes End-to-End (Playwright)
+
+Os testes E2E rodam no navegador real (Chromium) para validar jornadas completas do usuário (roteamento, persistência de dados no `localStorage`, troca de layouts e alternância de temas):
+
+#### Como executar os testes:
+```bash
+# Execução rápida no terminal (headless)
+npm run test:e2e
+
+# Execução com Interface Gráfica interativa (UI Mode com Time Travel e inspeção de DOM)
+npm run test:e2e:ui
+
+# Abrir o relatório visual HTML da última execução
+npx playwright show-report
+```
+
+#### Como gravar novos testes como uma "Macro" (Codegen):
+O Playwright possui um gerador de código que permite gravar suas ações no navegador e gerar o código de teste automaticamente:
+
+1. Inicie o servidor da aplicação em um terminal (`npm run dev`);
+2. Em outro terminal, execute o gravador:
+   ```bash
+   npx playwright codegen http://localhost:5173
+   ```
+3. Uma janela do navegador e a janela do **Playwright Inspector** serão abertas lado a lado.
+4. Conforme você clica nos botões, digita nos formulários e navega pelas páginas, o Playwright vai **escrevendo o código TypeScript em tempo real**.
+5. Ao terminar, copie o código gerado e salve em um novo arquivo dentro da pasta `e2e/` (ex: `e2e/login.spec.ts`).
+
+*(Alternativamente, dentro do `npm run test:e2e:ui`, você pode clicar no botão **"Record new"** no topo da tela para gravar ações diretamente pela interface gráfica).*
 
 ---
 
