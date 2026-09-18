@@ -1,0 +1,35 @@
+# ==============================================================================
+# AI & Search Ignore (.ignore)
+# Arquivos que DEVEM estar no Git, mas NÃO devem ser lidos/indexados por IAs
+# Obs: O que já está no .gitignore (node_modules, dist, .env, etc.) já é ignorado automaticamente.
+# ==============================================================================
+
+# Lockfiles de dependências (pesados e dispensáveis para o contexto de código)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Imagens, fontes e arquivos binários
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.webp
+*.avif
+*.svg
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# Mapas de código e arquivos minificados
+*.min.js
+*.min.css
+*.map
+
+# Documentos ou dumps binários
+*.pdf
+*.zip
+*.tar.gz
