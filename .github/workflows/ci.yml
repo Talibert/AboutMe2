@@ -1,0 +1,58 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+# Permite cancelar execuções antigas em andamento se um novo commit for enviado no mesmo PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Type-Check, Testes & Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Criar .env a partir de .env.example
+        run: cp .env.example .env
+
+      - name: 1. Checagem de Tipos (vue-tsc)
+        run: npm run type-check
+
+      - name: 2. Testes Unitários e Componentes (Vitest)
+        run: npm test
+
+      - name: 3. Build de Produção
+        run: npm run build
+
+      - name: Instalar Browser Chromium do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: 4. Testes End-to-End (Playwright)
+        run: npm run test:e2e
+
+      # Faz upload do relatório apenas se algum teste falhar, evitando consumo desnecessário de armazenamento
+      - name: Upload do Relatório Playwright (Apenas em Falha)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

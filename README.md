@@ -360,6 +360,29 @@ O Playwright possui um gerador de código que permite gravar suas ações no nav
 
 ---
 
+## 🔄 Integração Contínua (CI/CD — GitHub Actions)
+
+O projeto conta com uma pipeline automatizada via **GitHub Actions** em [`.github/workflows/ci.yml`](.github/workflows/ci.yml), executada a cada `push` ou `pull_request` nas branches `master` e `main`:
+
+```mermaid
+flowchart LR
+    A["1. Checagem de Tipos\n(vue-tsc)"] --> B["2. Testes Unitários\n(Vitest)"]
+    B --> C["3. Build de Produção\n(Vite)"]
+    C --> D["4. Testes E2E\n(Playwright)"]
+    D -->|Apenas em Falha| E["Upload de Relatório\n(7 dias de retenção)"]
+```
+
+### Etapas da Pipeline:
+1. **Ambiente e Dependências:** Prepara o ambiente com Node.js 22, cache nativo de dependências (`cache: 'npm'`) e instalação reproduzível via `npm ci`.
+2. **Checagem de Tipos:** Executa `npm run type-check` com `vue-tsc` para impedir código com inconsistências de tipo no repositório.
+3. **Testes Unitários e Componentes:** Roda toda a suíte de testes do Vitest com Happy DOM (`npm test`).
+4. **Build de Produção:** Valida a geração dos bundles e assets estáticos (`npm run build`).
+5. **Testes End-to-End:** Instala o Chromium headless e executa as jornadas de ponta a ponta do Playwright (`npm run test:e2e`).
+6. **Armazenamento Inteligente:** O relatório completo de testes só é salvo como artefato caso ocorra alguma falha (`if: failure()`), com auto-expiração em **7 dias**, garantindo custo zero e evitando consumo desnecessário da cota do GitHub.
+7. **Cancelamento Automático:** Commits adicionais no mesmo Pull Request cancelam execuções anteriores ainda em andamento (`cancel-in-progress: true`), economizando minutos de máquina.
+
+---
+
 ## 📄 Licença
 
 Este projeto foi feito pelo Taliberti e é disponibilizado como template livre para uso pessoal e comercial sob a licença [MIT](https://opensource.org/licenses/MIT).
