@@ -4,8 +4,11 @@ import { useRoute } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import BlankLayout from '@/layouts/BlankLayout.vue'
+import IntroSplash from '@/components/common/IntroSplash.vue'
+import { useIntro } from '@/composables/useIntro'
 
 const route = useRoute()
+const { isIntroActive, finishIntro } = useIntro()
 
 // Mapeamento dos layouts disponíveis
 const layouts = {
@@ -25,16 +28,49 @@ const currentLayout = computed(() => {
 </script>
 
 <template>
-  <component :is="currentLayout">
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component" :key="route.path" />
-      </transition>
-    </router-view>
-  </component>
+  <div class="app-root">
+    <!-- Tela de apresentação inicial: Guilherme Taliberti com transição suave -->
+    <Transition name="splash-fade">
+      <IntroSplash
+        v-if="isIntroActive"
+        name="Guilherme Taliberti"
+        subtitle="Analista de Sistemas"
+        :duration="3000"
+        @finish="finishIntro"
+      />
+    </Transition>
+
+    <component :is="currentLayout">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" :key="route.path" />
+        </transition>
+      </router-view>
+    </component>
+  </div>
 </template>
 
 <style scoped>
+.app-root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Transição suave de saída da tela de apresentação (splash) para a Home */
+.splash-fade-leave-active {
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.splash-fade-leave-to {
+  opacity: 0;
+  transform: scale(1.03);
+  filter: blur(8px);
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
@@ -45,3 +81,4 @@ const currentLayout = computed(() => {
   opacity: 0;
 }
 </style>
+
