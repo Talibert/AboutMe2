@@ -15,7 +15,7 @@ const router = createRouter({
 
 // Navigation Guard: Atualizar título da página dinamicamente
 router.beforeEach((to) => {
-  const appTitle = import.meta.env.VITE_APP_TITLE || 'BaseFront'
+  const appTitle = import.meta.env.VITE_APP_TITLE || 'Taliberti'
   document.title = to.meta.title ? `${to.meta.title} | ${appTitle}` : appTitle
 })
 
