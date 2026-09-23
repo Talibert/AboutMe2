@@ -30,7 +30,7 @@ export const authService = {
     // ------------------------------------------------------------------------
     // FLUXO A: MOCK LOCAL (Executado quando VITE_USE_MOCK_API='true')
     // ------------------------------------------------------------------------
-    if (import.meta.env.VITE_USE_MOCK_API === 'true') {
+    if (import.meta.env.VITE_USE_MOCK_API !== 'false') {
       // Simula 600ms de latência de rede
       await new Promise((resolve) => setTimeout(resolve, 600))
 

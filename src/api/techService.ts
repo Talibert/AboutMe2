@@ -78,13 +78,18 @@ export const techService = {
    * Obtém a lista de features/tecnologias que compõem o ecossistema da aplicação.
    */
   async getItens(): Promise<TechItem[]> {
-    if (import.meta.env.VITE_USE_MOCK_API === 'true') {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+    if (import.meta.env.VITE_USE_MOCK_API !== 'false') {
+      await new Promise((resolve) => setTimeout(resolve, 500))
       return [...MOCK_FEATURES]
     }
 
-    const response = await apiClient.get<TechItem[]>('/features')
-    return response.data
+    try {
+      const response = await apiClient.get<TechItem[]>('/features')
+      return response.data
+    } catch (error) {
+      console.warn('API /features indisponível, usando dados de fallback locais:', error)
+      return [...MOCK_FEATURES]
+    }
   },
 }
 

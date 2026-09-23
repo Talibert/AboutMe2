@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import HomeHero from '@/components/home/HomeHero.vue'
 import GitHubProfileCard from '@/components/common/GitHubProfileCard.vue'
 import BaseCarousel from '@/components/common/BaseCarousel.vue'
 import { techService } from '@/api/techService'
@@ -26,14 +27,8 @@ onMounted(async () => {
 
 <template>
   <div class="home-view">
-    <section class="hero">
-      <div class="badge">Vue 3 + Vite + TypeScript + Pinia</div>
-      <h1 class="hero-title">Template Basefront</h1>
-      <p class="hero-subtitle">
-        Template profissional pronto para escalar suas aplicações Vue 3 com arquitetura limpa,
-        roteamento dinâmico, estado global e tipagem estrita.
-      </p>
-    </section>
+    <!-- Hero Principal do Portfólio de Guilherme Taliberti -->
+    <HomeHero />
 
     <!-- Seção do Criador / Demonstração de API Externa -->
     <section class="github-section">
