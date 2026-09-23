@@ -5,7 +5,7 @@ test.describe('Navegação e Layout', () => {
     await page.goto('/')
 
     // Verifica o título da página
-    await expect(page).toHaveTitle(/BaseFront/)
+    await expect(page).toHaveTitle(/Início | Taliberti/)
 
     // Verifica se a logo/marca está visível no header
     const brand = page.locator('.brand')
