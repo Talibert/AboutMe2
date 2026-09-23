@@ -94,29 +94,55 @@ const techStack = [
         </div>
       </div>
 
+      <!-- ===================================================================
+           COLUNA DA DIREITA: Retrato em Card Janela de Código / IDE
+           =================================================================== -->
       <div class="hero-photo-col">
         <div class="photo-card-wrapper">
-          <!-- Brilho ambiente atrás da moldura da foto -->
+          <!-- Brilho ambiente atrás da janela -->
           <div class="photo-ambient-glow" aria-hidden="true"></div>
 
-          <!-- Moldura com cantos arredondados e borda translúcida moderna -->
-          <div class="photo-frame">
-            <!-- Shimmer enquanto a imagem carrega -->
-            <div v-if="!imageLoaded" class="photo-skeleton" aria-hidden="true"></div>
+          <!-- Moldura Janela IDE / Editor de Código -->
+          <div class="ide-window">
+            <!-- Barra Superior / Abas do Editor -->
+            <div class="ide-titlebar">
+              <div class="window-controls" aria-hidden="true">
+                <span class="control-dot control-dot--close"></span>
+                <span class="control-dot control-dot--minimize"></span>
+                <span class="control-dot control-dot--maximize"></span>
+              </div>
 
-            <img
-              :src="AVATAR_URL"
-              alt="Foto de perfil de Guilherme Taliberti"
-              class="profile-img"
-              :class="{ 'is-loaded': imageLoaded }"
-              loading="eager"
-              @load="imageLoaded = true"
-            />
+              <div class="ide-meta" aria-hidden="true">
+                <span class="branch-tag">main*</span>
+              </div>
+            </div>
 
+            <!-- Corpo da Janela: Foto de alta definição com corte nítido -->
+            <div class="ide-body">
+              <!-- Shimmer enquanto a imagem carrega -->
+              <div v-if="!imageLoaded" class="photo-skeleton" aria-hidden="true"></div>
+
+              <img
+                :src="AVATAR_URL"
+                alt="Foto de perfil de Guilherme Taliberti"
+                class="profile-img"
+                :class="{ 'is-loaded': imageLoaded }"
+                loading="eager"
+                @load="imageLoaded = true"
+              />
+            </div>
+
+            <!-- Barra de Status Inferior da IDE -->
+            <div class="ide-statusbar" aria-hidden="true">
+              <div class="status-col">
+                <span class="status-branch-icon">⎇</span>
+                <span>master</span>
+              </div>
+              <div class="status-col">
+                <span>UTF-8</span>
+              </div>
+            </div>
           </div>
-
-          <!-- Ponto decorativo geométrico no canto -->
-          <div class="decorative-corner" aria-hidden="true"></div>
         </div>
       </div>
 
@@ -402,30 +428,93 @@ const techStack = [
   pointer-events: none;
 }
 
-/* Moldura do Retrato */
-.photo-frame {
+/* ============================================================================
+   CARD JANELA DE CÓDIGO / IDE
+   ============================================================================ */
+
+/* Janela da IDE */
+.ide-window {
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 1 / 1.08;
-  border-radius: 28px;
+  border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--color-border);
   background-color: var(--color-background-soft);
   box-shadow:
-    0 20px 40px -15px rgba(0, 0, 0, 0.15),
-    0 0 0 1px hsla(160, 100%, 37%, 0.12);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    0 20px 40px -15px rgba(0, 0, 0, 0.25),
+    0 0 0 1px hsla(160, 100%, 37%, 0.15);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.photo-card-wrapper:hover .photo-frame {
-  transform: translateY(-6px) scale(1.01);
+.photo-card-wrapper:hover .ide-window {
+  transform: translateY(-6px);
   box-shadow:
-    0 28px 50px -15px rgba(0, 0, 0, 0.25),
-    0 0 0 1px hsla(160, 100%, 37%, 0.35);
+    0 28px 50px -15px rgba(0, 0, 0, 0.35),
+    0 0 0 1px hsla(160, 100%, 37%, 0.4);
 }
 
-/* Imagem de perfil */
+/* Barra de Título / Abas */
+.ide-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background-color: var(--color-background-mute);
+  border-bottom: 1px solid var(--color-border);
+  user-select: none;
+}
+
+/* Controles de Janela macOS */
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 50px;
+}
+
+.control-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.control-dot--close {
+  background-color: #ff5f56;
+}
+
+.control-dot--minimize {
+  background-color: #ffbd2e;
+}
+
+.control-dot--maximize {
+  background-color: #27c93f;
+}
+
+/* Meta da Barra Superior */
+.ide-meta {
+  display: flex;
+  justify-content: flex-end;
+  width: 50px;
+}
+
+.branch-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-text);
+  opacity: 0.65;
+}
+
+/* Corpo da Janela com a Foto */
+.ide-body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  overflow: hidden;
+  background-color: var(--color-background);
+}
+
 .profile-img {
   width: 100%;
   height: 100%;
@@ -441,7 +530,27 @@ const techStack = [
 }
 
 .photo-card-wrapper:hover .profile-img {
-  transform: scale(1.04);
+  transform: scale(1.03);
+}
+
+/* Barra de Status Inferior da IDE */
+.ide-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 1rem;
+  background-color: var(--color-background-mute);
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-text);
+  opacity: 0.85;
+  user-select: none;
+}
+
+.status-col {
+  display: flex;
+  align-items: center;
 }
 
 /* Skeleton Loading da Foto */

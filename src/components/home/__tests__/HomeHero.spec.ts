@@ -53,4 +53,15 @@ describe('HomeHero.vue', () => {
 
     expect(wrapper.find('.floating-badge').exists()).toBe(false)
   })
+
+  it('6. Deve renderizar a moldura em formato de Janela de Código / IDE minimalista', () => {
+    const wrapper = mount(HomeHero)
+
+    expect(wrapper.find('.ide-window').exists()).toBe(true)
+    expect(wrapper.find('.ide-titlebar').exists()).toBe(true)
+    expect(wrapper.findAll('.control-dot')).toHaveLength(3)
+    expect(wrapper.find('.branch-tag').text()).toContain('main*')
+    expect(wrapper.find('.ide-statusbar').text()).toContain('master')
+    expect(wrapper.find('.ide-statusbar').text()).toContain('UTF-8')
+  })
 })
