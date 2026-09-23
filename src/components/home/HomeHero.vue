@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useIntro } from '@/composables/useIntro'
+
+const { isIntroActive, isIntroDismissed } = useIntro()
 
 // URL estática em alta resolução (600x600) do avatar do GitHub
 const AVATAR_URL = 'https://avatars.githubusercontent.com/u/112726589?v=4&s=600'
@@ -14,10 +17,78 @@ const techStack = [
   { name: 'Vue.js 3', color: '#42b883' },
   { name: 'TypeScript', color: '#3178c6' },
 ]
+
+const FULL_ROLE = 'Analista de Sistemas'
+
+// Se a intro já não estiver ativa ou já tiver sido descartada, começa revelado
+const isRevealed = ref(!isIntroActive.value || isIntroDismissed.value)
+const displayedRole = ref(isRevealed.value ? FULL_ROLE : '')
+const isTyping = ref(false)
+
+let typeInterval: ReturnType<typeof setInterval> | null = null
+let delayTimeout: ReturnType<typeof setTimeout> | null = null
+
+function startTypewriter(): void {
+  if (typeInterval) clearInterval(typeInterval)
+  displayedRole.value = ''
+  isTyping.value = true
+  let charIndex = 0
+
+  typeInterval = setInterval(() => {
+    if (charIndex < FULL_ROLE.length) {
+      displayedRole.value += FULL_ROLE.charAt(charIndex)
+      charIndex++
+    } else {
+      isTyping.value = false
+      if (typeInterval) {
+        clearInterval(typeInterval)
+        typeInterval = null
+      }
+    }
+  }, 110)
+}
+
+function triggerHeroReveal(): void {
+  if (isRevealed.value) return
+  isRevealed.value = true
+
+  // Inicia a digitação de forma ágil logo após o início do deslize das colunas
+  delayTimeout = setTimeout(() => {
+    startTypewriter()
+  }, 180)
+}
+
+// Dispara a animação assim que a intro começar a sumir (ou tiver sumido)
+watch(
+  [isIntroActive, isIntroDismissed],
+  ([active, dismissed]) => {
+    if ((!active || dismissed) && !isRevealed.value) {
+      triggerHeroReveal()
+    }
+  },
+  { immediate: true },
+)
+
+onMounted(() => {
+  // Se entrou na página e a intro já havia sumido anteriormente, garante exibição imediata
+  if (!isIntroActive.value || isIntroDismissed.value) {
+    isRevealed.value = true
+    displayedRole.value = FULL_ROLE
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeInterval) clearInterval(typeInterval)
+  if (delayTimeout) clearTimeout(delayTimeout)
+})
 </script>
 
 <template>
-  <section class="hero-container" aria-label="Apresentação Profissional">
+  <section
+    class="hero-container"
+    :class="{ 'is-revealed': isRevealed }"
+    aria-label="Apresentação Profissional"
+  >
     <!-- Grid com duas colunas no desktop: Texto à esquerda e Foto à direita -->
     <div class="hero-grid">
 
@@ -39,7 +110,8 @@ const techStack = [
           </h1>
           <h2 class="hero-role">
             <span class="role-bracket">&lt;</span>
-            Analista de Sistemas
+            <span class="typewriter-text">{{ displayedRole }}</span>
+            <span class="typewriter-cursor">_</span>
             <span class="role-bracket">/&gt;</span>
           </h2>
         </div>
@@ -81,7 +153,7 @@ const techStack = [
           </a>
 
           <a
-            href="https://www.linkedin.com/in/guilherme-taliberti/"
+            href="https://www.linkedin.com/in/guilhermetaliberti/"
             target="_blank"
             rel="noopener noreferrer"
             class="btn-hero btn-hero--secondary"
@@ -169,13 +241,23 @@ const techStack = [
 }
 
 /* ============================================================================
-   COLUNA DE TEXTO
+   COLUNA DE TEXTO (DESLIZA SUAVEMENTE DA ESQUERDA)
    ============================================================================ */
 .hero-text-col {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   z-index: 2;
+  opacity: 0;
+  transform: translateX(-80px);
+  transition:
+    opacity 2.2s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-container.is-revealed .hero-text-col {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Status Pill (Disponível para projetos) */
@@ -278,6 +360,31 @@ const techStack = [
   display: flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+.typewriter-text {
+  display: inline;
+  color: var(--color-heading);
+  min-height: 1.2em;
+}
+
+.typewriter-cursor {
+  font-family: var(--font-mono);
+  color: hsla(160, 100%, 37%, 1);
+  font-weight: 700;
+  margin-left: 2px;
+  margin-right: 4px;
+  display: inline-block;
+  animation: cursorBlink 0.8s infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .role-bracket {
@@ -393,13 +500,23 @@ const techStack = [
 }
 
 /* ============================================================================
-   COLUNA DA FOTO (RETRATO MODERNO)
+   COLUNA DA FOTO (DESLIZA SUAVEMENTE DA DIREITA AO MESMO TEMPO)
    ============================================================================ */
 .hero-photo-col {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  opacity: 0;
+  transform: translateX(80px);
+  transition:
+    opacity 2.2s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-container.is-revealed .hero-photo-col {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .photo-card-wrapper {

@@ -1,14 +1,43 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import HomeHero from '../HomeHero.vue'
+import { useIntro } from '@/composables/useIntro'
 
 describe('HomeHero.vue', () => {
-  it('1. Deve renderizar o nome e cargo de Guilherme Taliberti com destaque', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    const { isIntroActive, isIntroDismissed } = useIntro()
+    isIntroActive.value = true
+    isIntroDismissed.value = false
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('1. Deve renderizar o nome e cargo de Guilherme Taliberti após o término da intro e digitação', async () => {
+    const { markIntroDismissed } = useIntro()
     const wrapper = mount(HomeHero)
 
     expect(wrapper.find('.hero-name').text()).toContain('Guilherme')
     expect(wrapper.find('.hero-name').text()).toContain('Taliberti')
+
+    // Antes da intro sumir, o hero não possui a classe is-revealed
+    expect(wrapper.find('.hero-container').classes()).not.toContain('is-revealed')
+
+    // Simula o fim da intro (splash sumiu e disparou @after-leave)
+    markIntroDismissed()
+    await wrapper.vm.$nextTick()
+
+    // O container agora possui a classe is-revealed que dispara as animações CSS
+    expect(wrapper.find('.hero-container').classes()).toContain('is-revealed')
+
+    // Avança o delay inicial (180ms) + digitação completa (20 caracteres * 110ms = 2200ms)
+    vi.advanceTimersByTime(2600)
+    await wrapper.vm.$nextTick()
+
     expect(wrapper.find('.hero-role').text()).toContain('Analista de Sistemas')
+    expect(wrapper.find('.typewriter-cursor').exists()).toBe(true)
   })
 
   it('2. Deve renderizar a lista de tecnologias principais', () => {
@@ -63,5 +92,25 @@ describe('HomeHero.vue', () => {
     expect(wrapper.find('.branch-tag').text()).toContain('main*')
     expect(wrapper.find('.ide-statusbar').text()).toContain('master')
     expect(wrapper.find('.ide-statusbar').text()).toContain('UTF-8')
+  })
+
+  it('7. Deve exibir a digitação incremental letra por letra do cargo', async () => {
+    const { markIntroDismissed } = useIntro()
+    const wrapper = mount(HomeHero)
+
+    markIntroDismissed()
+    await wrapper.vm.$nextTick()
+
+    // Avança o delay inicial (180ms) + 3 caracteres (110ms cada = 330ms)
+    vi.advanceTimersByTime(180 + 110 * 3)
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.typewriter-text').text()).toBe('Ana')
+
+    // Avança mais 5 caracteres (110ms * 5 = 550ms)
+    vi.advanceTimersByTime(110 * 5)
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.typewriter-text').text()).toBe('Analista')
   })
 })

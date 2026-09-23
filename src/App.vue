@@ -8,7 +8,7 @@ import IntroSplash from '@/components/common/IntroSplash.vue'
 import { useIntro } from '@/composables/useIntro'
 
 const route = useRoute()
-const { isIntroActive, finishIntro } = useIntro()
+const { isIntroActive, finishIntro, markIntroDismissed } = useIntro()
 
 // Mapeamento dos layouts disponíveis
 const layouts = {
@@ -30,12 +30,12 @@ const currentLayout = computed(() => {
 <template>
   <div class="app-root">
     <!-- Tela de apresentação inicial: Guilherme Taliberti com transição suave -->
-    <Transition name="splash-fade">
+    <Transition name="splash-fade" @after-leave="markIntroDismissed">
       <IntroSplash
         v-if="isIntroActive"
         name="Guilherme Taliberti"
         subtitle="Analista de Sistemas"
-        :duration="3000"
+        :duration="2500"
         @finish="finishIntro"
       />
     </Transition>
@@ -59,9 +59,9 @@ const currentLayout = computed(() => {
 /* Transição suave de saída da tela de apresentação (splash) para a Home */
 .splash-fade-leave-active {
   transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
