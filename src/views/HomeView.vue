@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
+import FeaturedProjects from '@/components/home/FeaturedProjects.vue'
 import GitHubProfileCard from '@/components/common/GitHubProfileCard.vue'
 import BaseCarousel from '@/components/common/BaseCarousel.vue'
 import { techService } from '@/api/techService'
@@ -26,6 +27,9 @@ onMounted(async () => {
   <div class="home-view">
     <!-- Hero Principal do Portfólio de Guilherme Taliberti -->
     <HomeHero />
+
+    <!-- Seção de Projetos em Destaque -->
+    <FeaturedProjects />
 
     <!-- Seção do Criador / Demonstração de API Externa -->
     <section class="github-section">
