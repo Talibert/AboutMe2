@@ -33,7 +33,7 @@ describe('Service: techService', () => {
 
     const titles = items.map((i) => i.title)
     expect(titles).toContain('Pinia & Persistência')
-    expect(titles).toContain('Vue Router 4 & Layouts')
+    expect(titles).toContain('Vue Router 4 & Navegação')
     expect(titles).toContain('Vitest & Vue Test Utils')
   })
 

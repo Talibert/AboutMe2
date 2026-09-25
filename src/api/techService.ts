@@ -30,10 +30,10 @@ const MOCK_FEATURES: TechItem[] = [
     id: 'router',
     icon: '🧭',
     badge: 'Navegação',
-    title: 'Vue Router 4 & Layouts',
+    title: 'Vue Router 4 & Navegação',
     description:
-      'Sistema de layouts intercambiáveis (Default, Auth, Blank) resolvidos dinamicamente, com proteção de rotas e restauração de scroll.',
-    highlights: ['Lazy-Loading (Code-splitting)', 'Guarda de Autenticação', 'Tipagem de RouteMeta'],
+      'Sistema de roteamento moderno com carregamento sob demanda (lazy-loading), títulos dinâmicos e restauração de scroll.',
+    highlights: ['Lazy-Loading (Code-splitting)', 'Scroll Inteligente', 'Tipagem de RouteMeta'],
   },
   {
     id: 'vite',
@@ -48,10 +48,10 @@ const MOCK_FEATURES: TechItem[] = [
     id: 'axios',
     icon: '🌐',
     badge: 'Comunicação',
-    title: 'Axios & Interceptors',
+    title: 'Axios & HTTP Client',
     description:
-      'Cliente HTTP centralizado com injeção automática de token Bearer, tratamento global de status 401 e chave seletora de Mock via .env.',
-    highlights: ['Request Interceptors', 'Auto-logout em 401', 'Modo Mock desacoplado'],
+      'Cliente HTTP centralizado com tratamento global de erros, timeouts configurados e chave seletora de Mock via .env.',
+    highlights: ['Tratamento de Erros', 'Timeout Resiliente', 'Modo Mock desacoplado'],
   },
   {
     id: 'vitest',

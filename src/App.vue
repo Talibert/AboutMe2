@@ -1,30 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import AuthLayout from '@/layouts/AuthLayout.vue'
-import BlankLayout from '@/layouts/BlankLayout.vue'
 import IntroSplash from '@/components/common/IntroSplash.vue'
 import { useIntro } from '@/composables/useIntro'
 
 const route = useRoute()
 const { isIntroActive, finishIntro, markIntroDismissed } = useIntro()
-
-// Mapeamento dos layouts disponíveis
-const layouts = {
-  default: DefaultLayout,
-  auth: AuthLayout,
-  blank: BlankLayout,
-}
-
-/**
- * Layout computado com fallback automático para 'default'.
- * Sempre que a rota mudar, vamos tentar obter o layout dela.
- */
-const currentLayout = computed(() => {
-  const layoutKey = route.meta.layout || 'default'
-  return layouts[layoutKey] || DefaultLayout
-})
 </script>
 
 <template>
@@ -40,13 +21,13 @@ const currentLayout = computed(() => {
       />
     </Transition>
 
-    <component :is="currentLayout">
+    <DefaultLayout>
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
-    </component>
+    </DefaultLayout>
   </div>
 </template>
 

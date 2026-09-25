@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { RouterLink } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
 
-const router = useRouter()
-const authStore = useAuthStore()
 const themeStore = useThemeStore()
-
-function handleLogout() {
-  authStore.logout()
-  router.push('/login')
-}
 </script>
 
 <template>
@@ -35,17 +27,6 @@ function handleLogout() {
           >
             {{ themeStore.isDark ? '🌙' : '☀️' }}
           </button>
-
-          <!-- Seção de Usuário / Auth -->
-          <template v-if="authStore.isAuthenticated">
-            <RouterLink to="/profile" class="nav-link user-profile-link">
-              👤 {{ authStore.userName }}
-            </RouterLink>
-            <button type="button" class="logout-btn" @click="handleLogout">Sair</button>
-          </template>
-          <template v-else>
-            <RouterLink to="/login" class="nav-link nav-link--button">Login</RouterLink>
-          </template>
         </nav>
       </div>
     </header>
@@ -95,6 +76,17 @@ function handleLogout() {
   text-decoration: none;
 }
 
+.brand-logo {
+  font-size: 1.35rem;
+}
+
+.brand-name {
+  background: linear-gradient(135deg, var(--color-heading) 0%, hsla(160, 100%, 37%, 1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -105,7 +97,9 @@ function handleLogout() {
   text-decoration: none;
   color: var(--color-text);
   font-weight: 500;
+  font-size: 0.95rem;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .nav-link:hover,
@@ -125,41 +119,6 @@ function handleLogout() {
 
 .theme-toggle-btn:hover {
   background-color: var(--color-background-soft);
-}
-
-.user-info {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.logout-btn {
-  padding: 0.35rem 0.75rem;
-  background-color: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s ease;
-}
-
-.logout-btn:hover {
-  background-color: #ef4444;
-  color: #fff;
-  border-color: #ef4444;
-}
-
-.nav-link--button {
-  padding: 0.4rem 1rem;
-  background-color: hsla(160, 100%, 37%, 1);
-  color: #fff !important;
-  border-radius: 6px;
-  transition: opacity 0.2s ease;
-}
-
-.nav-link--button:hover {
-  opacity: 0.9;
 }
 
 .main-content {

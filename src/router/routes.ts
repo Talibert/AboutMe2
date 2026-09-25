@@ -7,7 +7,6 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/views/HomeView.vue'),
     meta: {
       title: 'Início',
-      layout: 'default',
     },
   },
   {
@@ -16,26 +15,6 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/views/AboutView.vue'),
     meta: {
       title: 'Sobre',
-      layout: 'default',
-    },
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: () => import('@/views/ProfileView.vue'),
-    meta: {
-      title: 'Meu Perfil',
-      layout: 'default',
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/LoginView.vue'),
-    meta: {
-      title: 'Entrar',
-      layout: 'auth',
     },
   },
   {
@@ -44,7 +23,6 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/views/NotFoundView.vue'),
     meta: {
       title: '404 Não Encontrado',
-      layout: 'blank',
     },
   },
 ]

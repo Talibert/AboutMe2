@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import HomeHero from '@/components/home/HomeHero.vue'
 import GitHubProfileCard from '@/components/common/GitHubProfileCard.vue'
 import BaseCarousel from '@/components/common/BaseCarousel.vue'
 import { techService } from '@/api/techService'
 import type { TechItem } from '@/types/tech'
 
-const authStore = useAuthStore()
 const counter = ref(0)
 
 const techItens = ref<TechItem[]>([])
@@ -68,34 +65,6 @@ onMounted(async () => {
 
 
     <section class="interactive-demo">
-      <h3>Estado Global (Pinia)</h3>
-
-      <div v-if="authStore.isAuthenticated" class="auth-card logged-in">
-        <div class="user-meta">
-          <span class="user-icon">🟢</span>
-          <div class="user-info">
-            <span class="user-name">Logado como <strong>{{ authStore.user?.name }}</strong></span>
-            <span class="user-email">{{ authStore.user?.email }}</span>
-          </div>
-        </div>
-
-        <div class="user-actions">
-          <button class="btn-action btn-logout" @click="authStore.logout">Desconectar</button>
-        </div>
-      </div>
-
-      <div v-else class="auth-card logged-out">
-        <div class="user-meta">
-          <span class="user-icon">⚪</span>
-          <span class="logged-out-text">Nenhum usuário autenticado no momento.</span>
-        </div>
-        <div class="user-actions">
-          <RouterLink to="/login" class="btn-action btn-login">Entrar</RouterLink>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
       <h3>Reatividade Local (para testes)</h3>
       <p class="demo-sub">Contador simples gerenciado via <code>ref()</code>:</p>
       <div class="counter-box">
@@ -188,102 +157,6 @@ onMounted(async () => {
   color: var(--color-heading);
   font-weight: 600;
   margin-bottom: 0.5rem;
-}
-
-.auth-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 1.25rem;
-  border-radius: 12px;
-  margin-top: 1.25rem;
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  text-align: left;
-}
-
-.user-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.user-icon {
-  font-size: 1.15rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.user-name {
-  font-size: 0.95rem;
-  color: var(--color-heading);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.user-email {
-  font-size: 0.8rem;
-  color: var(--color-text);
-  opacity: 0.75;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.logged-out-text {
-  font-size: 0.9rem;
-  color: var(--color-text);
-}
-
-.user-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.btn-action {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  border: none;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  transition: opacity 0.2s ease;
-}
-
-.btn-action:hover {
-  opacity: 0.85;
-}
-
-.btn-profile {
-  background-color: hsla(160, 100%, 37%, 0.15);
-  color: hsla(160, 100%, 37%, 1);
-  border: 1px solid hsla(160, 100%, 37%, 0.3);
-}
-
-.btn-login {
-  background-color: hsla(160, 100%, 37%, 1);
-  color: #fff;
-}
-
-.btn-logout {
-  background-color: #ef4444;
-  color: #fff;
 }
 
 

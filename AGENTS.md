@@ -13,7 +13,7 @@ Frontend em Vue 3 com Vite, TypeScript, Pinia e Vue Router.
 - **Vue 3:** Sempre use Single File Components com `<script setup lang="ts">`. Nunca use Options API.
 - **Imports:** Use o alias `@/` para referenciar o diretório `src/` (evite caminhos relativos longos como `../../`).
 - **Pinia:** Use a sintaxe de *Setup Store* (`defineStore('nome', () => { ... }, { persist: true })`), seguindo o padrão de [src/stores/theme.ts](file:///Users/taliberti/Development/Personal/basefront/src/stores/theme.ts).
-- **Layouts:** Páginas em `src/views/` usam layouts definidos via metadados de rota (`meta: { layout: 'default' | 'auth' | 'blank' }`).
+- **Layouts:** A aplicação adota o `DefaultLayout` centralizado em `src/layouts/DefaultLayout.vue` envolvendo o router-view.
 - **TypeScript:** Tipagem estrita. Evite o uso de `any`; crie ou reutilize tipos em `src/types/`.
 
 ## Restrições e Cuidados

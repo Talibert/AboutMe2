@@ -29,9 +29,8 @@ A estrutura dentro de `src/` segue princípios de responsabilidade única e esca
 ```text
 src/
 ├── api/                  # Camada de rede e comunicação HTTP
-│   ├── client.ts         # Instância centralizada do Axios com interceptors (backend próprio)
-│   ├── authService.ts    # Serviços de autenticação (login, logout, perfil)
-│   ├── githubService.ts  # Exemplo de consumo de API externa (Axios limpo sem interceptors)
+│   ├── client.ts         # Instância centralizada do Axios com configuração padronizada
+│   ├── githubService.ts  # Exemplo de consumo de API externa (GitHub pública)
 │   └── techService.ts    # Serviço de tecnologias e recursos (Mock ou API real)
 ├── assets/               # Recursos estáticos globais e estilos
 │   ├── base.css          # Reset de CSS e variáveis de cores (temas claro/escuro)
@@ -42,31 +41,25 @@ src/
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
-├── layouts/              # Cascas visuais intercambiáveis
-│   ├── DefaultLayout.vue # Layout padrão (com navbar responsiva, container e footer)
-│   ├── AuthLayout.vue    # Layout centralizado para login, cadastro e recuperação
-│   └── BlankLayout.vue   # Layout limpo sem casca (páginas 404, landing pages)
+├── layouts/              # Cascas visuais da aplicação
+│   └── DefaultLayout.vue # Layout padrão (com navbar responsiva, container e footer)
 ├── router/               # Configuração e guardas do Vue Router
 │   ├── index.ts          # Instância do router, scrollBehavior e navigation guards
 │   └── routes.ts         # Mapeamento e declaração de todas as rotas
 ├── stores/               # Gerenciamento de estado global com Pinia
 │   ├── index.ts          # Inicialização e registro de plugins do Pinia
-│   ├── auth.ts           # Store de autenticação, usuário ativo e tokens
 │   └── theme.ts          # Store de tema (claro, escuro ou sistema)
 ├── types/                # Definições de interfaces e modelos TypeScript
 │   ├── api.ts            # Tipagens de respostas e erros HTTP genéricos
-│   ├── auth.ts           # Interfaces de User, LoginCredentials e AuthResponse
 │   ├── github.ts         # Modelo da resposta da API pública do GitHub
 │   ├── router.d.ts       # Extensão de tipos dos metadados de rotas (RouteMeta)
 │   └── tech.ts           # Interface dos recursos e módulos tecnológicos
 ├── utils/                # Funções utilitárias puras (formatadores, máscaras, datas)
 ├── views/                # Páginas/Telas associadas às rotas
-│   ├── HomeView.vue      # Página inicial com vitrine de recursos e testes
+│   ├── HomeView.vue      # Página inicial com Hero, foto, vitrine de recursos e testes
 │   ├── AboutView.vue     # Página informativa sobre a stack
-│   ├── LoginView.vue     # Tela de login com formulário e redirecionamento
-│   ├── ProfileView.vue   # Tela protegida com dados do usuário autenticado
 │   └── NotFoundView.vue  # Tela 404 para rotas inexistentes
-├── App.vue               # Componente raiz com resolução dinâmica de layouts
+├── App.vue               # Componente raiz com DefaultLayout e IntroSplash
 ├── env.d.ts              # Tipagem estrita de variáveis de ambiente Vite
 └── main.ts               # Ponto de entrada da aplicação (bootstrap)
 ```
@@ -75,47 +68,31 @@ src/
 
 ## ⚙️ Principais Funcionalidades
 
-### 1. Sistema Dinâmico de Layouts
-Permite que cada tela utilize uma estrutura visual própria (ex: tela de Login sem navbar vs Dashboard completo com sidebar e navbar):
+### 1. Layout Centralizado e Transições de Rota
+A aplicação utiliza uma estrutura visual unificada e limpa:
 
-1. A rota declara qual layout deseja utilizar através do campo `meta.layout` em [`src/router/routes.ts`](file:///Users/taliberti/Development/Personal/basefront/src/router/routes.ts):
-   ```typescript
-   {
-     path: '/login',
-     component: () => import('@/views/LoginView.vue'),
-     meta: { layout: 'auth' }
-   }
-   ```
-2. O arquivo [`src/App.vue`](file:///Users/taliberti/Development/Personal/basefront/src/App.vue) mapeia o nome informado para o componente correspondente (`default`, `auth` ou `blank`).
-3. Se a rota não especificar nenhum layout, o fallback automático é o `DefaultLayout`.
-4. Transições suaves em animação fade (`mode="out-in"`) são aplicadas entre as trocas de página.
+1. O layout principal [`src/layouts/DefaultLayout.vue`](file:///Users/taliberti/Development/Personal/basefront/src/layouts/DefaultLayout.vue) engloba o `router-view` em [`src/App.vue`](file:///Users/taliberti/Development/Personal/basefront/src/App.vue), fornecendo cabeçalho, navegação com alternância de tema e rodapé consistente em todas as páginas.
+2. Transições suaves em animação fade (`mode="out-in"`) são aplicadas entre as trocas de página.
 
-### 2. Navegação Segura e Guardas de Rota (*Navigation Guards*)
+### 2. Navegação e Guardas de Rota (*Navigation Guards*)
 Em [`src/router/index.ts`](file:///Users/taliberti/Development/Personal/basefront/src/router/index.ts):
 * **Título Dinâmico da Aba**: O título do documento (`document.title`) é atualizado automaticamente baseado no `to.meta.title`.
-* **Rotas Protegidas (`requiresAuth: true`)**: Usuários não autenticados são barrados e redirecionados para `/login?redirect=<url_original>`.
-* **Redirecionamento Pós-Login**: Ao entrar no sistema, o usuário é direcionado de volta para a rota que tentou acessar originalmente.
-* **Bloqueio de Login Redundante**: Usuários já logados que tentarem acessar a rota `/login` são redirecionados de volta para a Home.
 * **Scroll Inteligente**: Toda navegação retorna ao topo (`top: 0`), preservando a posição anterior ao clicar no botão "Voltar" do navegador.
 
 ### 3. Gerenciamento de Estado Global (Pinia)
 Construído com o padrão **Setup Store** (Composition API):
 
-* **`useAuthStore`** ([`src/stores/auth.ts`](file:///Users/taliberti/Development/Personal/basefront/src/stores/auth.ts)):
-  * Gerencia o estado de `user`, `token` e `isLoading`.
-  * Fornece o getter computado `isAuthenticated`.
-  * **Persistência Seletiva**: Utiliza `pinia-plugin-persistedstate` gravando apenas `user` e `token` no `localStorage` via opção `pick: ['user', 'token']`, mantendo estados efêmeros apenas em memória.
 * **`useThemeStore`** ([`src/stores/theme.ts`](file:///Users/taliberti/Development/Personal/basefront/src/stores/theme.ts)):
   * Permite alternar entre os temas `light`, `dark` e `system`.
   * Injeta a classe `.dark` e o atributo `data-theme="dark"` no elemento raiz `<html>`.
   * Ouve automaticamente preferências do sistema operacional caso esteja em modo `system`.
+  * **Persistência Local**: Salva o tema escolhido no `localStorage` via plugin `pinia-plugin-persistedstate`.
 
 ### 4. Camada HTTP Profissional (Axios)
 Configurada em [`src/api/client.ts`](file:///Users/taliberti/Development/Personal/basefront/src/api/client.ts) e desacoplada em serviços:
 
-* **Request Interceptor**: Anexa automaticamente o cabeçalho `Authorization: Bearer <token>` lendo o token ativo na store do Pinia.
-* **Response Interceptor**: Intercepta erros `401 Unauthorized` globalmente, executando logout automático e redirecionamento para o login caso a sessão expire no servidor.
-* **Modo Mock / Backend Real**: O serviço [`src/api/authService.ts`](file:///Users/taliberti/Development/Personal/basefront/src/api/authService.ts) possui uma chave seletora via variável de ambiente. Em desenvolvimento sem backend, ele simula a autenticação com delay de rede. Quando conectado a um backend real, executa requisições HTTP normais sem exigir alterações nas telas ou stores.
+* **Cliente Dedicado**: Instância própria com `baseURL`, `timeout` configurado e cabeçalhos padrão.
+* **Modo Mock / Backend Real**: O serviço [`src/api/techService.ts`](file:///Users/taliberti/Development/Personal/basefront/src/api/techService.ts) possui uma chave seletora via variável de ambiente. Em desenvolvimento local, ele simula dados com delay assíncrono. Em ambiente conectado, consome APIs reais sem alterar componentes.
 
 ---
 
