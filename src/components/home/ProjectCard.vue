@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import type { ProjectItem } from '@/types/project'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import type { ProjectItem, ProjectArchitectureDiagram } from '@/types/project'
 
 interface Props {
   project: ProjectItem
@@ -21,6 +21,32 @@ const opacity = ref(props.growOnScroll ? 0.45 : 1.0)
 const isExpanded = ref(!props.growOnScroll)
 
 let isListening = false
+
+const diagram = computed<ProjectArchitectureDiagram>(() => {
+  if (props.project.architectureDiagram) {
+    return props.project.architectureDiagram
+  }
+  // Fallbacks de segurança para compatibilidade com dados parciais ou mocks
+  if (props.project.previewTheme === 'frontend-spa') {
+    return {
+      topLayer: { icon: '⚡', name: 'Vue 3 & Composition API', tag: 'UI & Views' },
+      flow: { leftPill: 'Pinia (State)', rightPill: 'Vue Router & Axios', arrow: '⇄' },
+      bottomLayer: { icon: '🧪', name: 'Vitest & Playwright E2E', tag: 'Testes & CI' },
+    }
+  }
+  if (props.project.previewTheme === 'ecommerce-platform') {
+    return {
+      topLayer: { icon: '🎮', name: 'Catálogo & Inventário', tag: 'REST API' },
+      flow: { leftPill: 'Spring Security (Auth)', rightPill: 'Transações & Pedidos', arrow: '⇄' },
+      bottomLayer: { icon: '🗄️', name: 'Spring Data JPA & Hibernate', tag: 'PostgreSQL' },
+    }
+  }
+  return {
+    topLayer: { icon: '☕', name: 'Domain & Use Cases', tag: 'Clean Arch' },
+    flow: { leftPill: 'Kafka Events', rightPill: 'Flyway / Postgres', arrow: '⇄' },
+    bottomLayer: { icon: '🐳', name: 'Docker & Spring Boot 3', tag: 'Infra & Cloud' },
+  }
+})
 
 function updateScale(): void {
   if (!props.growOnScroll || isExpanded.value || typeof window === 'undefined') return
@@ -107,74 +133,46 @@ onBeforeUnmount(() => {
         class="project-image"
       />
 
-      <!-- Espaço reservado / Ilustração temática moderna -->
+      <!-- Ilustração temática moderna / Diagrama de arquitetura padronizado -->
       <div v-else class="project-placeholder" :class="`theme--${project.previewTheme}`">
         <div class="placeholder-topbar">
           <span class="dot red"></span>
           <span class="dot yellow"></span>
           <span class="dot green"></span>
-          <span class="preview-filename">{{ project.repoName }} / preview</span>
+          <span class="preview-filename">{{ project.repoName }} / architecture</span>
         </div>
 
         <div class="placeholder-canvas">
-          <!-- Tema Backend / Arquitetura Limpa / Kafka -->
-          <template v-if="project.previewTheme === 'backend-architecture'">
-            <div class="architecture-diagram">
-              <div class="arch-layer core">
-                <span class="layer-icon">☕</span>
-                <span class="layer-name">Domain & Use Cases</span>
-              </div>
-              <div class="arch-flow">
-                <span class="flow-pill">Kafka Events</span>
-                <span class="flow-arrow">⇄</span>
-                <span class="flow-pill">Flyway / Postgres</span>
-              </div>
-              <div class="arch-layer infra">
-                <span class="layer-icon">🐳</span>
-                <span class="layer-name">Docker & Spring Cloud</span>
-              </div>
+          <div class="architecture-diagram">
+            <!-- Camada Superior (Core / Domínio / UI) -->
+            <div class="arch-layer top">
+              <span class="layer-icon" aria-hidden="true">{{ diagram.topLayer.icon }}</span>
+              <span class="layer-name">{{ diagram.topLayer.name }}</span>
+              <span v-if="diagram.topLayer.tag" class="layer-tag">{{ diagram.topLayer.tag }}</span>
             </div>
-          </template>
 
-          <!-- Tema Frontend SPA / Vue 3 -->
-          <template v-else-if="project.previewTheme === 'frontend-spa'">
-            <div class="frontend-mockup">
-              <div class="mockup-header">
-                <span class="mock-tag">⚡ Vite + Pinia</span>
-                <span class="mock-tag">Vue 3 Composition</span>
-              </div>
-              <div class="mockup-body">
-                <div class="mock-block main-hero"></div>
-                <div class="mock-grid">
-                  <div class="mock-block mini"></div>
-                  <div class="mock-block mini"></div>
-                  <div class="mock-block mini"></div>
-                </div>
-              </div>
+            <!-- Fluxo de Conexão / Mensageria / Estado -->
+            <div class="arch-flow">
+              <span class="flow-pill">{{ diagram.flow.leftPill }}</span>
+              <span class="flow-arrow" aria-hidden="true">{{ diagram.flow.arrow || '⇄' }}</span>
+              <span class="flow-pill">{{ diagram.flow.rightPill }}</span>
             </div>
-          </template>
 
-          <!-- Tema E-commerce / Plataforma -->
-          <template v-else>
-            <div class="ecommerce-mockup">
-              <div class="shop-badge">📦 Catálogo Digital</div>
-              <div class="shop-cards-row">
-                <div class="shop-item-card">
-                  <div class="item-pic"></div>
-                  <div class="item-line"></div>
-                </div>
-                <div class="shop-item-card featured">
-                  <div class="item-pic"></div>
-                  <div class="item-line"></div>
-                </div>
-              </div>
+            <!-- Camada Inferior (Infra / Persistência / Testes) -->
+            <div class="arch-layer bottom">
+              <span class="layer-icon" aria-hidden="true">{{ diagram.bottomLayer.icon }}</span>
+              <span class="layer-name">{{ diagram.bottomLayer.name }}</span>
+              <span v-if="diagram.bottomLayer.tag" class="layer-tag">{{ diagram.bottomLayer.tag }}</span>
             </div>
-          </template>
+          </div>
         </div>
 
         <div class="placeholder-footer">
           <span class="category-tag">{{ project.category }}</span>
-          <span class="placeholder-hint">Espaço para captura de tela / demonstração</span>
+          <span class="diagram-tag">
+            <span class="tag-bullet" :style="{ backgroundColor: project.accentColor }"></span>
+            Arquitetura em Camadas
+          </span>
         </div>
       </div>
     </div>
@@ -368,7 +366,9 @@ onBeforeUnmount(() => {
   padding: 1.5rem 0.5rem;
 }
 
-/* Diagrama Backend */
+/* ============================================================================
+   DIAGRAMA ARQUITETURAL PADRONIZADO (CARDZINHOS ILUSTRATIVOS)
+   ============================================================================ */
 .architecture-diagram {
   display: flex;
   flex-direction: column;
@@ -380,133 +380,74 @@ onBeforeUnmount(() => {
 .arch-layer {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   padding: 0.55rem 1rem;
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: var(--color-background-soft);
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-heading);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-card:hover .arch-layer {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.layer-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.layer-name {
+  white-space: nowrap;
+}
+
+.layer-tag {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--color-background-mute);
+  color: var(--color-text);
+  opacity: 0.8;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  margin-left: 0.25rem;
 }
 
 .arch-flow {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: #f89820;
+  color: var(--accent-color, #f89820);
 }
 
 .flow-pill {
-  padding: 0.2rem 0.6rem;
-  border-radius: 6px;
-  background: rgba(248, 152, 32, 0.12);
-  border: 1px dashed rgba(248, 152, 32, 0.4);
-}
-
-/* Mockup Frontend */
-.frontend-mockup {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.mockup-header {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.mock-tag {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  background-color: rgba(66, 184, 131, 0.15);
-  color: #42b883;
-  border: 1px solid rgba(66, 184, 131, 0.3);
-}
-
-.mockup-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.mock-block.main-hero {
-  height: 48px;
+  padding: 0.25rem 0.65rem;
   border-radius: 8px;
-  background: linear-gradient(90deg, rgba(66, 184, 131, 0.2) 0%, rgba(49, 120, 198, 0.2) 100%);
+  background: var(--color-background-soft);
+  border: 1px dashed currentColor;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, border-style 0.2s ease;
 }
 
-.mock-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem;
+.project-card:hover .flow-pill {
+  border-style: solid;
 }
 
-.mock-block.mini {
-  height: 32px;
-  border-radius: 6px;
-  background-color: var(--color-background-soft);
-  border: 1px solid var(--color-border);
-}
-
-/* Mockup Ecommerce */
-.ecommerce-mockup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-  width: 90%;
-}
-
-.shop-badge {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: #38bdf8;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.shop-cards-row {
-  display: flex;
-  gap: 0.75rem;
-  width: 100%;
-}
-
-.shop-item-card {
-  flex: 1;
-  padding: 0.6rem;
-  border-radius: 8px;
-  background-color: var(--color-background-soft);
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.shop-item-card.featured {
-  border-color: rgba(56, 189, 248, 0.5);
-}
-
-.item-pic {
-  height: 40px;
-  border-radius: 6px;
-  background-color: var(--color-background-mute);
-}
-
-.item-line {
-  height: 8px;
-  width: 60%;
-  border-radius: 4px;
-  background-color: var(--color-border);
+.flow-arrow {
+  font-size: 0.9rem;
+  font-weight: 700;
+  opacity: 0.85;
 }
 
 .placeholder-footer {
@@ -524,11 +465,21 @@ onBeforeUnmount(() => {
   color: var(--color-heading);
 }
 
-.placeholder-hint {
-  font-family: var(--font-body);
-  font-size: 0.72rem;
+.diagram-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
   color: var(--color-text);
-  opacity: 0.5;
+  opacity: 0.75;
+}
+
+.tag-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 /* ============================================================================

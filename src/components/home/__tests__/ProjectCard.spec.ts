@@ -96,4 +96,29 @@ describe('ProjectCard.vue', () => {
     expect(img.attributes('src')).toBe('https://exemplo.com/preview.png')
     expect(wrapper.find('.project-placeholder').exists()).toBe(false)
   })
+
+  it('6. Deve renderizar as camadas e fluxo de um architectureDiagram tipado customizado', () => {
+    const wrapper = mount(ProjectCard, {
+      props: {
+        project: {
+          ...mockProject,
+          architectureDiagram: {
+            topLayer: { icon: '🚀', name: 'Custom Core', tag: 'Alpha' },
+            flow: { leftPill: 'Custom Flow A', rightPill: 'Custom Flow B', arrow: '→' },
+            bottomLayer: { icon: '🛡️', name: 'Custom Infra', tag: 'Beta' },
+          },
+        },
+        growOnScroll: false,
+      },
+    })
+
+    expect(wrapper.text()).toContain('Custom Core')
+    expect(wrapper.text()).toContain('Custom Flow A')
+    expect(wrapper.text()).toContain('Custom Flow B')
+    expect(wrapper.text()).toContain('Custom Infra')
+    expect(wrapper.text()).toContain('Alpha')
+    expect(wrapper.text()).toContain('Beta')
+    expect(wrapper.find('.flow-arrow').text()).toBe('→')
+  })
 })
+

@@ -13,6 +13,33 @@ export interface GitHubRepoDetails {
   default_branch: string
 }
 
+/**
+ * Camada estrutural do diagrama do projeto (ex: Domínio, Infra, UI, Persistência)
+ */
+export interface ProjectDiagramLayer {
+  icon: string
+  name: string
+  tag?: string
+}
+
+/**
+ * Fluxo de dados, mensageria ou comunicação entre camadas
+ */
+export interface ProjectDiagramFlow {
+  leftPill: string
+  rightPill: string
+  arrow?: string
+}
+
+/**
+ * Estrutura tipada do diagrama arquitetural em "cardzinhos" ilustrativos
+ */
+export interface ProjectArchitectureDiagram {
+  topLayer: ProjectDiagramLayer
+  flow: ProjectDiagramFlow
+  bottomLayer: ProjectDiagramLayer
+}
+
 export interface ProjectItem {
   id: string
   repoName: string
@@ -24,9 +51,11 @@ export interface ProjectItem {
   liveUrl?: string
   accentColor: string
   category: 'Backend' | 'Frontend' | 'Fullstack' | 'Sistemas Distribuídos'
-  previewTheme: 'backend-architecture' | 'frontend-spa' | 'ecommerce-platform'
+  previewTheme?: 'backend-architecture' | 'frontend-spa' | 'ecommerce-platform'
+  architectureDiagram?: ProjectArchitectureDiagram
   image?: string
   stars?: number
   forks?: number
   language?: string
 }
+

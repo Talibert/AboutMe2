@@ -35,6 +35,23 @@ export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
     accentColor: '#f89820',
     category: 'Backend',
     previewTheme: 'backend-architecture',
+    architectureDiagram: {
+      topLayer: {
+        icon: '☕',
+        name: 'Domain & Use Cases',
+        tag: 'Clean Arch',
+      },
+      flow: {
+        leftPill: 'Kafka Events',
+        rightPill: 'Flyway / Postgres',
+        arrow: '⇄',
+      },
+      bottomLayer: {
+        icon: '🐳',
+        name: 'Docker & Spring Boot 3',
+        tag: 'Infra & Cloud',
+      },
+    },
   },
   {
     id: 'base-front',
@@ -57,6 +74,23 @@ export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
     accentColor: '#42b883',
     category: 'Frontend',
     previewTheme: 'frontend-spa',
+    architectureDiagram: {
+      topLayer: {
+        icon: '⚡',
+        name: 'Vue 3 & Composition API',
+        tag: 'UI & Views',
+      },
+      flow: {
+        leftPill: 'Pinia (State)',
+        rightPill: 'Vue Router & Axios',
+        arrow: '⇄',
+      },
+      bottomLayer: {
+        icon: '🧪',
+        name: 'Vitest & Playwright E2E',
+        tag: 'Testes & CI',
+      },
+    },
   },
   {
     id: 'rune-store',
@@ -78,6 +112,23 @@ export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
     accentColor: '#38bdf8',
     category: 'Fullstack',
     previewTheme: 'ecommerce-platform',
+    architectureDiagram: {
+      topLayer: {
+        icon: '🎮',
+        name: 'Catálogo & Inventário',
+        tag: 'REST API',
+      },
+      flow: {
+        leftPill: 'Spring Security (Auth)',
+        rightPill: 'Transações & Pedidos',
+        arrow: '⇄',
+      },
+      bottomLayer: {
+        icon: '🗄️',
+        name: 'Spring Data JPA & Hibernate',
+        tag: 'PostgreSQL',
+      },
+    },
   },
 ]
 

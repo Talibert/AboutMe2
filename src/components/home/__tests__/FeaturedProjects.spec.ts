@@ -65,25 +65,29 @@ describe('FeaturedProjects.vue', () => {
     })
   })
 
-  it('5. Deve renderizar a área reservada de mídia e ilustrações temáticas quando não houver imagem', () => {
+  it('5. Deve renderizar diagramas de arquitetura padronizados para todos os cards quando não houver imagem', () => {
     const wrapper = mount(FeaturedProjects)
 
     const placeholders = wrapper.findAll('.project-placeholder')
     expect(placeholders).toHaveLength(3)
 
+    const diagrams = wrapper.findAll('.architecture-diagram')
+    expect(diagrams).toHaveLength(3)
+
     // Primeiro card possui o tema backend architecture
     expect(wrapper.find('.theme--backend-architecture').exists()).toBe(true)
-    expect(wrapper.find('.architecture-diagram').exists()).toBe(true)
     expect(wrapper.text()).toContain('Domain & Use Cases')
     expect(wrapper.text()).toContain('Kafka Events')
 
     // Segundo card possui o tema frontend SPA
     expect(wrapper.find('.theme--frontend-spa').exists()).toBe(true)
-    expect(wrapper.find('.frontend-mockup').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Vue 3 & Composition API')
+    expect(wrapper.text()).toContain('Pinia (State)')
 
     // Terceiro card possui o tema ecommerce platform
     expect(wrapper.find('.theme--ecommerce-platform').exists()).toBe(true)
-    expect(wrapper.find('.ecommerce-mockup').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Catálogo & Inventário')
+    expect(wrapper.text()).toContain('Spring Security (Auth)')
   })
 
   it('6. Deve chamar o githubService para enriquecer os dados dos repositórios', async () => {
