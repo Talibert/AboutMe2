@@ -37,7 +37,7 @@ src/
 │   ├── main.css          # Estilos globais e regras de transição de tela
 │   └── logo.svg          # Logotipo vetorial da aplicação
 ├── components/           # Componentes reutilizáveis
-│   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, botões)
+│   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, SectionHeader, botões)
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
 │   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, TechStackCarousel, TechCard)
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
