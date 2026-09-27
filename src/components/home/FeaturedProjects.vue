@@ -48,7 +48,7 @@ onMounted(async () => {
 <style scoped>
 .featured-projects-section {
   width: 100%;
-  padding: 4rem 0 5rem;
+  padding: 3.5rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;

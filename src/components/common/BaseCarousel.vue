@@ -73,6 +73,10 @@ function goTo(index: number) {
   emit('slideChange', index, props.items[index])
 }
 
+function isCurrentSlide(index: number): boolean {
+  return index === currentIndex.value
+}
+
 function handleTouchStart(e: TouchEvent) {
   touchStartX = e.changedTouches[0]?.screenX || 0
 }
@@ -180,10 +184,18 @@ onUnmounted(() => {
           v-for="(item, index) in items"
           :key="resolveKey(item, index)"
           class="carousel-slide"
-          :class="{ 'is-active': index === currentIndex }"
+          :class="{ 'is-active': isCurrentSlide(index) }"
         >
-          <!-- Scoped Slot: Entrega o item tipado e o index para customização -->
-          <slot :item="item" :index="index" :is-active="index === currentIndex" />
+          <!--
+            ===================================================================
+            SCOPED SLOT (SLOT COM ESCOPO - O "ENVIO"):
+            O BaseCarousel é agnóstico: ele controla apenas o loop e a mecânica.
+            Ao usar ':item="item"', ':index="index"' e ':is-active="..."' aqui na tag
+            <slot>, o Vue empacota essas variáveis em um objeto e as envia para o pai.
+            O componente consumidor decide quais propriedades deseja utilizar via { item }.
+            ===================================================================
+          -->
+          <slot :item="item" :index="index" :is-active="isCurrentSlide(index)" />
         </div>
       </div>
 
@@ -250,7 +262,7 @@ onUnmounted(() => {
           :key="index"
           type="button"
           class="dot"
-          :class="{ 'is-active': index === currentIndex }"
+          :class="{ 'is-active': isCurrentSlide(index) }"
           :title="`Ir para slide ${index + 1}`"
           @click="goTo(index)"
         />

@@ -229,7 +229,7 @@ onBeforeUnmount(() => {
 .hero-container {
   position: relative;
   width: 100%;
-  padding: 2.5rem 0 4rem;
+  padding: 2.5rem 0 3.5rem;
   overflow: hidden;
 }
 

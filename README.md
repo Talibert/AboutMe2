@@ -39,7 +39,7 @@ src/
 ├── components/           # Componentes reutilizáveis
 │   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, botões)
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
-│   ├── home/             # Componentes específicos da Home (HomeHero, FeaturedProjects, ProjectCard)
+│   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, TechStackCarousel, TechCard)
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
 ├── layouts/              # Cascas visuais da aplicação
