@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
-import githubService from '../githubService'
+import githubService, { DEFAULT_FEATURED_PROJECTS } from '../githubService'
 
 vi.mock('axios', () => ({
   default: {
@@ -10,47 +10,66 @@ vi.mock('axios', () => ({
 
 describe('Service: githubService', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
     vi.clearAllMocks()
   })
 
-  afterEach(() => {
-    vi.useRealTimers()
-  })
-
-  it('1. Deve consultar o perfil no endpoint público do GitHub (após delay de 2000ms)', async () => {
-    const mockUser = {
-      id: 123,
-      login: 'Talibert',
-      name: 'Guilherme Taliberti',
+  it('1. Deve consultar detalhes do repositório no endpoint do GitHub', async () => {
+    const mockRepo = {
+      id: 999,
+      name: 'BaseProject',
+      full_name: 'Talibert/BaseProject',
+      html_url: 'https://github.com/Talibert/BaseProject',
+      description: 'Descrição remota do GitHub',
+      stargazers_count: 25,
+      forks_count: 5,
+      language: 'Java',
+      homepage: 'https://baseproject.demo',
     }
 
-    vi.mocked(axios.get).mockResolvedValueOnce({ data: mockUser } as any)
+    vi.mocked(axios.get).mockResolvedValueOnce({ data: mockRepo } as any)
 
-    const fetchPromise = githubService.getUserProfile('Talibert')
+    const result = await githubService.getRepoDetails('Talibert', 'BaseProject')
 
-    // Avança os 2000ms de delay simulados no serviço
-    await vi.advanceTimersByTimeAsync(2000)
-    const result = await fetchPromise
-
-    expect(axios.get).toHaveBeenCalledWith('https://api.github.com/users/Talibert', {
+    expect(axios.get).toHaveBeenCalledWith('https://api.github.com/repos/Talibert/BaseProject', {
       headers: {
         Accept: 'application/vnd.github.v3+json',
       },
     })
-    expect(result).toEqual(mockUser)
+    expect(result).toEqual(mockRepo)
   })
 
-  it('2. Deve propagar o erro caso a requisição ao GitHub falhe (após delay de 2000ms)', async () => {
-    vi.mocked(axios.get).mockRejectedValueOnce(new Error('User not found'))
+  it('2. Deve enriquecer a lista de projetos em destaque com dados retornados pela API', async () => {
+    vi.mocked(axios.get).mockImplementation((url: string) => {
+      const repoName = url.split('/').pop()
+      return Promise.resolve({
+        data: {
+          id: 100,
+          name: repoName,
+          html_url: `https://github.com/Talibert/${repoName}`,
+          description: `Repo ${repoName}`,
+          stargazers_count: 42,
+          forks_count: 8,
+          language: 'TypeScript',
+          homepage: null,
+        },
+      } as any)
+    })
 
-    const assertion = expect(
-      githubService.getUserProfile('usuario_inexistente'),
-    ).rejects.toThrow('User not found')
+    const projects = await githubService.getFeaturedProjects('Talibert')
 
-    // Avança os 2000ms de delay simulados no serviço
-    await vi.advanceTimersByTimeAsync(2000)
+    expect(projects).toHaveLength(DEFAULT_FEATURED_PROJECTS.length)
+    expect(projects[0]?.stars).toBe(42)
+    expect(projects[0]?.forks).toBe(8)
+  })
 
-    await assertion
+  it('3. Deve preservar dados locais de fallback caso a requisição à API do GitHub falhe', async () => {
+    vi.mocked(axios.get).mockRejectedValue(new Error('Rate limit exceeded'))
+
+    const projects = await githubService.getFeaturedProjects('Talibert')
+
+    expect(projects).toHaveLength(DEFAULT_FEATURED_PROJECTS.length)
+    expect(projects[0]?.id).toBe('base-project')
+    expect(projects[0]?.title).toBe(DEFAULT_FEATURED_PROJECTS[0]?.title)
   })
 })
+

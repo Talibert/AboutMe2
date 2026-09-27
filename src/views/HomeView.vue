@@ -2,12 +2,9 @@
 import { ref, onMounted } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
 import FeaturedProjects from '@/components/home/FeaturedProjects.vue'
-import GitHubProfileCard from '@/components/common/GitHubProfileCard.vue'
 import BaseCarousel from '@/components/common/BaseCarousel.vue'
 import { techService } from '@/api/techService'
 import type { TechItem } from '@/types/tech'
-
-const counter = ref(0)
 
 const techItens = ref<TechItem[]>([])
 const isLoadingFeatures = ref(true)
@@ -30,11 +27,6 @@ onMounted(async () => {
 
     <!-- Seção de Projetos em Destaque -->
     <FeaturedProjects />
-
-    <!-- Seção do Criador / Demonstração de API Externa -->
-    <section class="github-section">
-      <GitHubProfileCard username="Talibert" />
-    </section>
 
     <!-- Carrossel Genérico exibindo Recursos da Aplicação -->
     <section class="features-carousel-section">
@@ -66,18 +58,6 @@ onMounted(async () => {
         </template>
       </BaseCarousel>
     </section>
-
-
-    <section class="interactive-demo">
-      <h3>Reatividade Local (para testes)</h3>
-      <p class="demo-sub">Contador simples gerenciado via <code>ref()</code>:</p>
-      <div class="counter-box">
-        <button class="btn btn-secondary" @click="counter--">-</button>
-        <span class="counter-value">{{ counter }}</span>
-        <button class="btn btn-primary" @click="counter++">+</button>
-      </div>
-    </section>
-
   </div>
 </template>
 
@@ -88,149 +68,8 @@ onMounted(async () => {
   gap: 3rem;
 }
 
-.github-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.section-title {
-  text-align: center;
-}
-
-.section-title h3 {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--color-heading);
-  margin-bottom: 0.25rem;
-}
-
-.section-title p {
-  font-size: 0.95rem;
-  color: var(--color-text);
-  opacity: 0.75;
-}
-
-.hero {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: hsla(160, 100%, 37%, 1);
-  background: hsla(160, 100%, 37%, 0.1);
-  border-radius: 9999px;
-  margin-bottom: 1rem;
-}
-
-.hero-title {
-  font-size: 2.75rem;
-  font-weight: 800;
-  line-height: 1.2;
-  color: var(--color-heading);
-  margin-bottom: 1rem;
-}
-
-.hero-subtitle {
-  font-size: 1.15rem;
-  color: var(--color-text);
-  opacity: 0.85;
-}
-
 .features-carousel-section {
   width: 100%;
-}
-
-.interactive-demo {
-  text-align: center;
-  background-color: var(--color-background-soft);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 2rem;
-  max-width: 520px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.interactive-demo h3 {
-  color: var(--color-heading);
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-
-.divider {
-  height: 1px;
-  background-color: var(--color-border);
-  margin: 1.5rem 0;
-}
-
-.demo-sub {
-  font-size: 0.875rem;
-  opacity: 0.8;
-  margin-bottom: 1.25rem;
-}
-
-.counter-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.counter-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  min-width: 3rem;
-  color: var(--color-heading);
-}
-
-.btn {
-  padding: 0.5rem 1.25rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-  background-color: var(--color-background);
-  color: var(--color-text);
-  transition: all 0.2s ease;
-}
-
-.btn:hover {
-  border-color: hsla(160, 100%, 37%, 1);
-}
-
-.btn-primary {
-  background-color: hsla(160, 100%, 37%, 1);
-  color: #fff;
-  border-color: hsla(160, 100%, 37%, 1);
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.btn-sm {
-  padding: 0.25rem 0.6rem;
-  font-size: 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-danger {
-  background-color: #ef4444;
-  color: #fff;
-  border: none;
-}
-
-.btn-danger:hover {
-  opacity: 0.9;
 }
 
 /* Card de Tecnologia dentro do BaseCarousel */

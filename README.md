@@ -37,8 +37,9 @@ src/
 │   ├── main.css          # Estilos globais e regras de transição de tela
 │   └── logo.svg          # Logotipo vetorial da aplicação
 ├── components/           # Componentes reutilizáveis
-│   ├── common/           # Elementos da interface (BaseCarousel, GitHubProfileCard, botões)
+│   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, botões)
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
+│   ├── home/             # Componentes específicos da Home (HomeHero, FeaturedProjects, ProjectCard)
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
 ├── layouts/              # Cascas visuais da aplicação
@@ -51,7 +52,7 @@ src/
 │   └── theme.ts          # Store de tema (claro, escuro ou sistema)
 ├── types/                # Definições de interfaces e modelos TypeScript
 │   ├── api.ts            # Tipagens de respostas e erros HTTP genéricos
-│   ├── github.ts         # Modelo da resposta da API pública do GitHub
+│   ├── project.ts        # Modelos dos projetos em destaque e diagramas de arquitetura
 │   ├── router.d.ts       # Extensão de tipos dos metadados de rotas (RouteMeta)
 │   └── tech.ts           # Interface dos recursos e módulos tecnológicos
 ├── utils/                # Funções utilitárias puras (formatadores, máscaras, datas)

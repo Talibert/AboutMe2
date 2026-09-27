@@ -10,7 +10,6 @@
  */
 
 import axios from 'axios'
-import type { GitHubUser } from '@/types/github'
 import type { GitHubRepoDetails, ProjectItem } from '@/types/project'
 
 export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
@@ -133,20 +132,6 @@ export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
 ]
 
 export const githubService = {
-  /**
-   * Busca o perfil público de qualquer usuário no GitHub.
-   * @param username Nome de usuário no GitHub
-   */
-  async getUserProfile(username: string): Promise<GitHubUser> {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    const response = await axios.get<GitHubUser>(`https://api.github.com/users/${username}`, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-      },
-    })
-    return response.data
-  },
-
   /**
    * Busca detalhes públicos de um repositório no GitHub.
    * @param owner Dono do repositório (ex: 'Talibert')
