@@ -1,43 +1,17 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { useThemeStore } from '@/stores/theme'
-
-const themeStore = useThemeStore()
+import AppHeader from '@/components/layout/AppHeader.vue'
+import AppFooter from '@/components/layout/AppFooter.vue'
 </script>
 
 <template>
   <div class="layout-default">
-    <header class="navbar">
-      <div class="nav-container">
-        <RouterLink to="/" class="brand">
-          <span class="brand-logo">⚡</span>
-          <span class="brand-name">BaseFront</span>
-        </RouterLink>
-
-        <nav class="nav-links">
-          <RouterLink to="/" class="nav-link">Início</RouterLink>
-          <RouterLink to="/about" class="nav-link">Sobre</RouterLink>
-
-          <!-- Botão de alternância de tema -->
-          <button
-            type="button"
-            class="theme-toggle-btn"
-            :title="themeStore.isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
-            @click="themeStore.toggleTheme"
-          >
-            {{ themeStore.isDark ? '🌙' : '☀️' }}
-          </button>
-        </nav>
-      </div>
-    </header>
+    <AppHeader />
 
     <main class="main-content">
       <slot />
     </main>
 
-    <footer class="footer">
-      <p>Taliberti &copy; {{ new Date().getFullYear() }}</p>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 
@@ -48,93 +22,11 @@ const themeStore = useThemeStore()
   min-height: 100vh;
 }
 
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(8px);
-}
-
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-heading);
-  text-decoration: none;
-}
-
-.brand-logo {
-  font-size: 1.35rem;
-}
-
-.brand-name {
-  background: linear-gradient(135deg, var(--color-heading) 0%, hsla(160, 100%, 37%, 1) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: var(--color-text);
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: color 0.2s ease;
-  position: relative;
-}
-
-.nav-link:hover,
-.nav-link.router-link-active {
-  color: hsla(160, 100%, 37%, 1);
-}
-
-.theme-toggle-btn {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 0.35rem 0.6rem;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease;
-}
-
-.theme-toggle-btn:hover {
-  background-color: var(--color-background-soft);
-}
-
 .main-content {
   flex: 1;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
-}
-
-.footer {
-  border-top: 1px solid var(--color-border);
-  padding: 1.5rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: var(--color-text);
-  opacity: 0.8;
 }
 </style>

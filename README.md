@@ -40,10 +40,13 @@ src/
 │   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, SectionHeader, botões)
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
 │   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, TechStackCarousel, TechCard)
+│   ├── layout/           # Componentes estruturais (AppHeader, AppFooter)
+│   │   └── __tests__/    # Testes unitários do cabeçalho e rodapé
 │   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
 ├── layouts/              # Cascas visuais da aplicação
-│   └── DefaultLayout.vue # Layout padrão (com navbar responsiva, container e footer)
+│   ├── DefaultLayout.vue # Layout padrão (composto por AppHeader, slot central e AppFooter)
+│   └── __tests__/        # Testes de integração do layout
 ├── router/               # Configuração e guardas do Vue Router
 │   ├── index.ts          # Instância do router, scrollBehavior e navigation guards
 │   └── routes.ts         # Mapeamento e declaração de todas as rotas
@@ -72,7 +75,7 @@ src/
 ### 1. Layout Centralizado e Transições de Rota
 A aplicação utiliza uma estrutura visual unificada e limpa:
 
-1. O layout principal [`src/layouts/DefaultLayout.vue`](file:///Users/taliberti/Development/Personal/basefront/src/layouts/DefaultLayout.vue) engloba o `router-view` em [`src/App.vue`](file:///Users/taliberti/Development/Personal/basefront/src/App.vue), fornecendo cabeçalho, navegação com alternância de tema e rodapé consistente em todas as páginas.
+1. O layout principal [`src/layouts/DefaultLayout.vue`](file:///Users/taliberti/Development/Personal/AboutMe2/src/layouts/DefaultLayout.vue) engloba o `router-view` em [`src/App.vue`](file:///Users/taliberti/Development/Personal/AboutMe2/src/App.vue), orquestrando os componentes modulares [`AppHeader.vue`](file:///Users/taliberti/Development/Personal/AboutMe2/src/components/layout/AppHeader.vue) (marca, navegação e alternância de tema) e [`AppFooter.vue`](file:///Users/taliberti/Development/Personal/AboutMe2/src/components/layout/AppFooter.vue) (rodapé e copyright dinâmico) com container de conteúdo centralizado.
 2. Transições suaves em animação fade (`mode="out-in"`) são aplicadas entre as trocas de página.
 
 ### 2. Navegação e Guardas de Rota (*Navigation Guards*)
