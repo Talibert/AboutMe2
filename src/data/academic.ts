@@ -47,7 +47,7 @@ export const DEFAULT_ACADEMIC_ITEMS: AcademicItem[] = [
     accentColor: '#10b981',
   },
   {
-    id: 'tecnico-mecatrônica',
+    id: 'tecnico-mecatronica',
     type: 'Curso Técnico',
     title: 'Técnico em Mecatrônica',
     institution: 'SENAI Roberto Simonsen',
