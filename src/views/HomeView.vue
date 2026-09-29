@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HomeHero from '@/components/home/HomeHero.vue'
 import FeaturedProjects from '@/components/home/FeaturedProjects.vue'
-import TechStackCarousel from '@/components/home/TechStackCarousel.vue'
+import AcademicCarousel from '@/components/home/AcademicCarousel.vue'
 </script>
 
 <template>
@@ -12,8 +12,8 @@ import TechStackCarousel from '@/components/home/TechStackCarousel.vue'
     <!-- Seção de Projetos em Destaque -->
     <FeaturedProjects />
 
-    <!-- Carrossel de Tecnologias & Arquitetura -->
-    <TechStackCarousel />
+    <!-- Carrossel de Formação Acadêmica & Cursos Técnicos -->
+    <AcademicCarousel />
   </div>
 </template>
 

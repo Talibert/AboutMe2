@@ -18,10 +18,9 @@ const categories = ['Todos', 'Backend', 'Frontend', 'Fullstack'] as const
 onMounted(async () => {
   try {
     // Delay artificial de 2 segundos para permitir a visualização dos cards de esqueleto modernos
-    const delayMs = import.meta.env.MODE === 'test' ? 0 : 2000
-    if (delayMs > 0) {
+    const delayMs = import.meta.env.MODE === 'test' ? 0 : 1000
+    if (delayMs > 0)
       await new Promise((resolve) => setTimeout(resolve, delayMs))
-    }
 
     const remoteProjects = await githubService.getAllProjects('Talibert')
     if (remoteProjects && remoteProjects.length > 0) {

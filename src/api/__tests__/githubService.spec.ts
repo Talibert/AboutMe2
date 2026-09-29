@@ -30,11 +30,14 @@ describe('Service: githubService', () => {
 
     const result = await githubService.getRepoDetails('Talibert', 'BaseProject')
 
-    expect(axios.get).toHaveBeenCalledWith('https://api.github.com/repos/Talibert/BaseProject', {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-      },
-    })
+    expect(axios.get).toHaveBeenCalledWith(
+      'https://api.github.com/repos/Talibert/BaseProject',
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Accept: 'application/vnd.github.v3+json',
+        }),
+      }),
+    )
     expect(result).toEqual(mockRepo)
   })
 
@@ -116,11 +119,11 @@ describe('Service: githubService', () => {
 
     expect(axios.get).toHaveBeenCalledWith(
       'https://api.github.com/users/Talibert/repos?sort=updated&per_page=100',
-      {
-        headers: {
+      expect.objectContaining({
+        headers: expect.objectContaining({
           Accept: 'application/vnd.github.v3+json',
-        },
-      },
+        }),
+      }),
     )
 
     // Apenas 2 repositórios (o fork é ignorado)

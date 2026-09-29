@@ -59,6 +59,6 @@ onMounted(async () => {
 
 .carousel-container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 720px;
 }
 </style>

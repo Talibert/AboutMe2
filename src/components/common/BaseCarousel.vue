@@ -274,7 +274,7 @@ onUnmounted(() => {
 <style scoped>
 .carousel-wrapper {
   position: relative;
-  max-width: 720px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
   user-select: none;

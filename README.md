@@ -39,11 +39,11 @@ src/
 ├── components/           # Componentes reutilizáveis
 │   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, SectionHeader, botões)
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
-│   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, TechStackCarousel, TechCard)
+│   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, AcademicCarousel, AcademicCard)
 │   ├── layout/           # Componentes estruturais (AppHeader, AppFooter)
 │   │   └── __tests__/    # Testes unitários do cabeçalho e rodapé
 ├── composables/          # Funções de lógica reutilizável (Composition API)
-├── data/                 # Catálogos estáticos, seeds e dados de fallback (projects.ts)
+├── data/                 # Catálogos estáticos, seeds e dados de fallback (projects.ts, academic.ts)
 │   └── __tests__/        # Testes de integridade e consistência dos catálogos
 ├── layouts/              # Cascas visuais da aplicação
 │   ├── DefaultLayout.vue # Layout padrão (composto por AppHeader, slot central e AppFooter)
