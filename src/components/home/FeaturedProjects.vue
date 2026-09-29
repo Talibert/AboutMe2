@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
-import { githubService, DEFAULT_FEATURED_PROJECTS } from '@/api/githubService'
+import { githubService } from '@/api/githubService'
+import { DEFAULT_FEATURED_PROJECTS } from '@/data/projects'
 import type { ProjectItem } from '@/types/project'
 import ProjectCard from './ProjectCard.vue'
 

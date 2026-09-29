@@ -9,9 +9,12 @@ describe('Router & Navigation Guards', () => {
   })
 
   it('1. Deve permitir acesso a rotas públicas e atualizar document.title dinamicamente', async () => {
+    await router.push('/projects')
+    expect(router.currentRoute.value.name).toBe('projects')
+    expect(document.title).toContain('Projetos')
+
     await router.push('/about')
-    expect(router.currentRoute.value.name).toBe('about')
-    expect(document.title).toContain('Sobre')
+    expect(router.currentRoute.value.name).toBe('projects')
 
     await router.push('/')
     expect(router.currentRoute.value.name).toBe('home')

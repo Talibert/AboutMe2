@@ -42,8 +42,9 @@ src/
 │   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, TechStackCarousel, TechCard)
 │   ├── layout/           # Componentes estruturais (AppHeader, AppFooter)
 │   │   └── __tests__/    # Testes unitários do cabeçalho e rodapé
-│   └── feedback/         # Alertas, spinners, modais de diálogo e toasts
 ├── composables/          # Funções de lógica reutilizável (Composition API)
+├── data/                 # Catálogos estáticos, seeds e dados de fallback (projects.ts)
+│   └── __tests__/        # Testes de integridade e consistência dos catálogos
 ├── layouts/              # Cascas visuais da aplicação
 │   ├── DefaultLayout.vue # Layout padrão (composto por AppHeader, slot central e AppFooter)
 │   └── __tests__/        # Testes de integração do layout
@@ -61,7 +62,7 @@ src/
 ├── utils/                # Funções utilitárias puras (formatadores, máscaras, datas)
 ├── views/                # Páginas/Telas associadas às rotas
 │   ├── HomeView.vue      # Página inicial com Hero, foto, vitrine de recursos e testes
-│   ├── AboutView.vue     # Página informativa sobre a stack
+│   ├── ProjectsView.vue  # Catálogo completo de projetos com busca e filtros por categoria
 │   └── NotFoundView.vue  # Tela 404 para rotas inexistentes
 ├── App.vue               # Componente raiz com DefaultLayout e IntroSplash
 ├── env.d.ts              # Tipagem estrita de variáveis de ambiente Vite

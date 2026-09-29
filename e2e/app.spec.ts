@@ -10,18 +10,18 @@ test.describe('Navegação e Layout', () => {
     // Verifica se a logo/marca está visível no header
     const brand = page.locator('.brand')
     await expect(brand).toBeVisible()
-    await expect(page.locator('.brand-name')).toHaveText('BaseFront')
+    await expect(page.locator('.brand-name')).toHaveText('Taliberti.')
   })
 
-  test('deve navegar entre as páginas Início e Sobre', async ({ page }) => {
+  test('deve navegar entre as páginas Início e Projetos', async ({ page }) => {
     await page.goto('/')
 
-    // Clica no link 'Sobre'
-    await page.click('nav >> text=Sobre')
+    // Clica no link 'Projetos'
+    await page.click('nav >> text=Projetos')
 
     // Aguarda e valida a URL e título
-    await expect(page).toHaveURL(/\/about$/)
-    await expect(page).toHaveTitle(/Sobre/)
+    await expect(page).toHaveURL(/\/projects$/)
+    await expect(page).toHaveTitle(/Projetos/)
   })
 
   test('deve alternar o tema e persistir a escolha no recarregamento', async ({ page }) => {

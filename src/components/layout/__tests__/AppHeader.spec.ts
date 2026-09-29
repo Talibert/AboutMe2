@@ -9,7 +9,7 @@ describe('AppHeader.vue', () => {
     setActivePinia(createPinia())
   })
 
-  it('1. Deve renderizar a marca com logo e nome', () => {
+  it('1. Deve renderizar a marca com nome Taliberti', () => {
     const wrapper = mount(AppHeader, {
       global: {
         stubs: {
@@ -20,11 +20,11 @@ describe('AppHeader.vue', () => {
       },
     })
 
-    expect(wrapper.find('.brand-logo').text()).toBe('⚡')
-    expect(wrapper.find('.brand-name').text()).toBe('BaseFront')
+    expect(wrapper.find('.brand-name').text()).toBe('Taliberti.')
+    expect(wrapper.find('.brand-logo').exists()).toBe(false)
   })
 
-  it('2. Deve renderizar links de navegação para Início e Sobre', () => {
+  it('2. Deve renderizar links de navegação para Início e Projetos', () => {
     const wrapper = mount(AppHeader, {
       global: {
         stubs: {
@@ -38,7 +38,7 @@ describe('AppHeader.vue', () => {
     const links = wrapper.findAll('.nav-link')
     expect(links).toHaveLength(2)
     expect(links[0]?.text()).toBe('Início')
-    expect(links[1]?.text()).toBe('Sobre')
+    expect(links[1]?.text()).toBe('Projetos')
   })
 
   it('3. Deve alternar o tema ao clicar no botão de alternância', async () => {

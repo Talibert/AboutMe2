@@ -10,12 +10,16 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import('@/views/AboutView.vue'),
+    path: '/projects',
+    name: 'projects',
+    component: () => import('@/views/ProjectsView.vue'),
     meta: {
-      title: 'Sobre',
+      title: 'Projetos',
     },
+  },
+  {
+    path: '/about',
+    redirect: '/projects',
   },
   {
     path: '/:pathMatch(.*)*',

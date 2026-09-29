@@ -8,14 +8,13 @@ const themeStore = useThemeStore()
 <template>
   <header class="navbar">
     <div class="nav-container">
-      <RouterLink to="/" class="brand">
-        <span class="brand-logo">⚡</span>
-        <span class="brand-name">BaseFront</span>
+      <RouterLink to="/" class="brand" title="Página inicial">
+        <span class="brand-name">Taliberti<span class="brand-dot">.</span></span>
       </RouterLink>
 
       <nav class="nav-links">
         <RouterLink to="/" class="nav-link">Início</RouterLink>
-        <RouterLink to="/about" class="nav-link">Sobre</RouterLink>
+        <RouterLink to="/projects" class="nav-link">Projetos</RouterLink>
 
         <!-- Botão de alternância de tema -->
         <button
@@ -60,15 +59,18 @@ const themeStore = useThemeStore()
   text-decoration: none;
 }
 
-.brand-logo {
-  font-size: 1.35rem;
-}
-
 .brand-name {
   background: linear-gradient(135deg, var(--color-heading) 0%, hsla(160, 100%, 37%, 1) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brand-dot {
+  color: hsla(160, 100%, 37%, 1);
+  -webkit-text-fill-color: hsla(160, 100%, 37%, 1);
 }
 
 .nav-links {

@@ -1,135 +1,25 @@
 /**
  * ============================================================================
- * SERVIÇO GITHUB (API EXTERNA)
+ * SERVIÇO GITHUB (API EXTERNA & CACHE)
  * ============================================================================
  *
- * Importa o Axios puro diretamente da biblioteca ('axios'), e NÃO o nosso
- * 'apiClient' customizado. Dessa forma:
- * - Aproveitamos o parse automático de JSON e tratamento de erro do Axios;
- * - Garantimos que NENHUM token Bearer da nossa aplicação seja enviado ao GitHub.
+ * Responsabilidade Única (SRP):
+ * - Comunicação HTTP com os endpoints públicos da API do GitHub;
+ * - Gerenciamento de cache em sessionStorage com TTL de 30 minutos;
+ * - Enriquecimento dinâmico de projetos com dados ao vivo (stars, forks, topics);
+ * - Fallback resiliente para a camada de dados (src/data/projects.ts) em caso
+ *   de rate limit anônimo (HTTP 403) ou ausência de conexão.
  */
 
 import axios from 'axios'
 import type { GitHubRepoDetails, ProjectItem } from '@/types/project'
+import { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS } from '@/data/projects'
 
-export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
-  {
-    id: 'base-project',
-    repoName: 'BaseProject',
-    title: 'BaseProject - Arquitetura Limpa em Java',
-    subtitle: 'Template de microsserviços escalável com Clean Arch & Kafka',
-    description:
-      'Template robusto para microsserviços e aplicações empresariais em Java. Implementa Clean Architecture (independência de frameworks), mensageria com Apache Kafka para eventos assíncronos, conteinerização com Docker, migrações de banco com Flyway e pirâmide completa de testes automatizados.',
-    technologies: [
-      'Java 21',
-      'Spring Boot 3',
-      'Clean Architecture',
-      'Apache Kafka',
-      'Docker',
-      'Flyway',
-      'JUnit 5 & Mockito',
-      'PostgreSQL',
-    ],
-    githubUrl: 'https://github.com/Talibert/BaseProject',
-    accentColor: '#f89820',
-    category: 'Backend',
-    previewTheme: 'backend-architecture',
-    architectureDiagram: {
-      topLayer: {
-        icon: '☕',
-        name: 'Domain & Use Cases',
-        tag: 'Clean Arch',
-      },
-      flow: {
-        leftPill: 'Kafka Events',
-        rightPill: 'Flyway / Postgres',
-        arrow: '⇄',
-      },
-      bottomLayer: {
-        icon: '🐳',
-        name: 'Docker & Spring Boot 3',
-        tag: 'Infra & Cloud',
-      },
-    },
-  },
-  {
-    id: 'base-front',
-    repoName: 'BaseFront',
-    title: 'BaseFront - Template de Frontend Moderno',
-    subtitle: 'Arquitetura SPA escalável com Vue 3, Vite & TypeScript',
-    description:
-      'Estrutura moderna de frontend desenvolvida como modelo de referência para projetos de alta performance. Adota Composition API com TypeScript estrito, gerenciamento de estado persistente com Pinia, roteamento com guards nativos e suíte abrangente de testes unitários (Vitest) e ponta a ponta (Playwright).',
-    technologies: [
-      'Vue.js 3',
-      'TypeScript',
-      'Vite',
-      'Pinia',
-      'Playwright',
-      'Vitest',
-      'Axios',
-      'CSS Moderno',
-    ],
-    githubUrl: 'https://github.com/Talibert/BaseFront',
-    accentColor: '#42b883',
-    category: 'Frontend',
-    previewTheme: 'frontend-spa',
-    architectureDiagram: {
-      topLayer: {
-        icon: '⚡',
-        name: 'Vue 3 & Composition API',
-        tag: 'UI & Views',
-      },
-      flow: {
-        leftPill: 'Pinia (State)',
-        rightPill: 'Vue Router & Axios',
-        arrow: '⇄',
-      },
-      bottomLayer: {
-        icon: '🧪',
-        name: 'Vitest & Playwright E2E',
-        tag: 'Testes & CI',
-      },
-    },
-  },
-  {
-    id: 'rune-store',
-    repoName: 'RuneStore',
-    title: 'RuneStore - Catálogo & E-commerce de Jogos',
-    subtitle: 'Sistema de vendas e gerenciamento de transações digitais',
-    description:
-      'Plataforma completa para controle de inventário, autenticação segura e fluxo de compras de itens virtuais. Desenvolvida com boas práticas de isolamento de domínio, persistência relacional com JPA/Hibernate e validações transacionais consistentes.',
-    technologies: [
-      'Java',
-      'Spring Boot',
-      'Spring Security',
-      'Spring Data JPA',
-      'Hibernate',
-      'PostgreSQL / H2',
-      'REST APIs',
-    ],
-    githubUrl: 'https://github.com/Talibert/RuneStore',
-    accentColor: '#38bdf8',
-    category: 'Fullstack',
-    previewTheme: 'ecommerce-platform',
-    architectureDiagram: {
-      topLayer: {
-        icon: '🎮',
-        name: 'Catálogo & Inventário',
-        tag: 'REST API',
-      },
-      flow: {
-        leftPill: 'Spring Security (Auth)',
-        rightPill: 'Transações & Pedidos',
-        arrow: '⇄',
-      },
-      bottomLayer: {
-        icon: '🗄️',
-        name: 'Spring Data JPA & Hibernate',
-        tag: 'PostgreSQL',
-      },
-    },
-  },
-]
+// Re-exporta para compatibilidade com consumidores e testes existentes
+export { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS }
+
+const CACHE_KEY = 'talibert_github_repos_cache'
+const CACHE_TTL_MS = 30 * 60 * 1000 // 30 minutos
 
 export const githubService = {
   /**
@@ -138,13 +28,17 @@ export const githubService = {
    * @param repo Nome do repositório (ex: 'BaseProject')
    */
   async getRepoDetails(owner: string, repo: string): Promise<GitHubRepoDetails> {
+    const headers: Record<string, string> = {
+      Accept: 'application/vnd.github.v3+json',
+    }
+    const token = import.meta.env.VITE_GITHUB_TOKEN
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+
     const response = await axios.get<GitHubRepoDetails>(
       `https://api.github.com/repos/${owner}/${repo}`,
-      {
-        headers: {
-          Accept: 'application/vnd.github.v3+json',
-        },
-      },
+      { headers },
     )
     return response.data
   },
@@ -165,17 +59,143 @@ export const githubService = {
             language: repo.language || project.category,
             githubUrl: repo.html_url || project.githubUrl,
             liveUrl: repo.homepage || undefined,
-            // Se o repositório tiver descrição no GitHub, pode complementar
             description: repo.description || project.description,
           }
         } catch {
-          // Em caso de falha de rede ou rate limit da API pública, preserva os dados de fallback
           return project
         }
       }),
     )
 
     return enrichedProjects
+  },
+
+  /**
+   * Retorna a lista completa de todos os projetos públicos do usuário no GitHub,
+   * combinando dados da API em tempo real com enriquecimento visual local,
+   * cache no sessionStorage e fallback completo em caso de falha de rede/rate limit.
+   */
+  async getAllProjects(owner = 'Talibert'): Promise<ProjectItem[]> {
+    // 1. Tenta recuperar do cache de sessão se ainda for válido
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      try {
+        const cachedStr = window.sessionStorage.getItem(CACHE_KEY)
+        if (cachedStr) {
+          const cached = JSON.parse(cachedStr)
+          if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS && Array.isArray(cached.data)) {
+            return cached.data
+          }
+        }
+      } catch {
+        // Ignora erro de parse de cache
+      }
+    }
+
+    try {
+      const headers: Record<string, string> = {
+        Accept: 'application/vnd.github.v3+json',
+      }
+      const token = import.meta.env.VITE_GITHUB_TOKEN
+      if (token) {
+        headers.Authorization = `Bearer ${token}`
+      }
+
+      const response = await axios.get<any[]>(
+        `https://api.github.com/users/${owner}/repos?sort=updated&per_page=100`,
+        { headers },
+      )
+
+      const remoteRepos = response.data
+
+      if (Array.isArray(remoteRepos) && remoteRepos.length > 0) {
+        const curatedMap = new Map<string, ProjectItem>(
+          DEFAULT_ALL_PROJECTS.map((p) => [p.repoName.toLowerCase(), p]),
+        )
+
+        const mappedProjects: ProjectItem[] = remoteRepos
+          .filter((repo) => !repo.fork && repo.name.toLowerCase() !== 'talibert')
+          .map((repo) => {
+            const curated = curatedMap.get(repo.name.toLowerCase())
+
+            if (curated) {
+              return {
+                ...curated,
+                stars: repo.stargazers_count ?? curated.stars,
+                forks: repo.forks_count ?? curated.forks,
+                githubUrl: repo.html_url || curated.githubUrl,
+                liveUrl: repo.homepage || curated.liveUrl,
+                description: repo.description || curated.description,
+              }
+            }
+
+            const technologies: string[] = []
+            if (repo.language) technologies.push(repo.language)
+            if (Array.isArray(repo.topics)) {
+              repo.topics.forEach((t: string) => {
+                if (!technologies.includes(t)) technologies.push(t)
+              })
+            }
+            if (technologies.length === 0) technologies.push('Software')
+
+            let category: ProjectItem['category'] = 'Backend'
+            const lowerLang = (repo.language || '').toLowerCase()
+            const lowerDesc = (repo.description || '').toLowerCase()
+            const lowerName = repo.name.toLowerCase()
+
+            if (
+              lowerLang.includes('vue') ||
+              lowerLang.includes('react') ||
+              lowerLang.includes('html') ||
+              lowerLang.includes('css') ||
+              lowerLang.includes('typescript') ||
+              lowerDesc.includes('frontend') ||
+              lowerName.includes('front')
+            ) {
+              category = 'Frontend'
+            } else if (
+              lowerDesc.includes('fullstack') ||
+              lowerDesc.includes('e-commerce') ||
+              lowerDesc.includes('plataforma')
+            ) {
+              category = 'Fullstack'
+            }
+
+            return {
+              id: repo.name.toLowerCase(),
+              repoName: repo.name,
+              title: repo.name,
+              subtitle: repo.language ? `Desenvolvido em ${repo.language}` : 'Repositório GitHub',
+              description: repo.description || 'Repositório público disponível no GitHub.',
+              technologies,
+              githubUrl: repo.html_url,
+              liveUrl: repo.homepage || undefined,
+              accentColor: '#38bdf8',
+              category,
+              stars: repo.stargazers_count,
+              forks: repo.forks_count,
+              language: repo.language || undefined,
+            }
+          })
+
+        // Salva no sessionStorage para evitar queimar o rate limit de 60 reqs/hora
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+          try {
+            window.sessionStorage.setItem(
+              CACHE_KEY,
+              JSON.stringify({ timestamp: Date.now(), data: mappedProjects }),
+            )
+          } catch {
+            // Ignora falha de armazenamento de cache
+          }
+        }
+
+        return mappedProjects
+      }
+
+      return DEFAULT_ALL_PROJECTS
+    } catch {
+      return DEFAULT_ALL_PROJECTS
+    }
   },
 }
 

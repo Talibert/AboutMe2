@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
-import githubService, { DEFAULT_FEATURED_PROJECTS } from '../githubService'
+import githubService, { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS } from '../githubService'
 
 vi.mock('axios', () => ({
   default: {
@@ -70,6 +70,73 @@ describe('Service: githubService', () => {
     expect(projects).toHaveLength(DEFAULT_FEATURED_PROJECTS.length)
     expect(projects[0]?.id).toBe('base-project')
     expect(projects[0]?.title).toBe(DEFAULT_FEATURED_PROJECTS[0]?.title)
+  })
+
+  it('4. Deve retornar a lista completa de projetos com getAllProjects caso a API falhe', async () => {
+    vi.mocked(axios.get).mockRejectedValue(new Error('Rate limit'))
+
+    const projects = await githubService.getAllProjects('Talibert')
+
+    expect(projects).toHaveLength(DEFAULT_ALL_PROJECTS.length)
+    expect(projects.map((p) => p.id)).toContain('course-plataform')
+    expect(projects.map((p) => p.id)).toContain('api-clean-arch')
+  })
+
+  it('5. Deve buscar repositórios dinamicamente do endpoint de repositórios do usuário', async () => {
+    const mockRemoteRepos = [
+      {
+        name: 'BaseProject',
+        description: 'Descrição remota do BaseProject',
+        stargazers_count: 50,
+        forks_count: 10,
+        html_url: 'https://github.com/Talibert/BaseProject',
+        homepage: 'https://baseproject.demo',
+        fork: false,
+      },
+      {
+        name: 'NovoRepoCriadoHoje',
+        description: 'Um novo repositório criado no GitHub',
+        language: 'Java',
+        topics: ['spring', 'clean-code'],
+        stargazers_count: 5,
+        forks_count: 1,
+        html_url: 'https://github.com/Talibert/NovoRepoCriadoHoje',
+        fork: false,
+      },
+      {
+        name: 'ForkDeOutroDev',
+        description: 'Repo forkado',
+        fork: true, // deve ser ignorado
+      },
+    ]
+
+    vi.mocked(axios.get).mockResolvedValueOnce({ data: mockRemoteRepos } as any)
+
+    const projects = await githubService.getAllProjects('Talibert')
+
+    expect(axios.get).toHaveBeenCalledWith(
+      'https://api.github.com/users/Talibert/repos?sort=updated&per_page=100',
+      {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+        },
+      },
+    )
+
+    // Apenas 2 repositórios (o fork é ignorado)
+    expect(projects).toHaveLength(2)
+
+    // BaseProject deve ter mantido curadoria e atualizado stars
+    const baseProject = projects.find((p) => p.repoName === 'BaseProject')
+    expect(baseProject?.stars).toBe(50)
+    expect(baseProject?.category).toBe('Backend')
+
+    // NovoRepoCriadoHoje deve ter sido gerado dinamicamente
+    const novoRepo = projects.find((p) => p.repoName === 'NovoRepoCriadoHoje')
+    expect(novoRepo?.title).toBe('NovoRepoCriadoHoje')
+    expect(novoRepo?.stars).toBe(5)
+    expect(novoRepo?.technologies).toContain('Java')
+    expect(novoRepo?.technologies).toContain('spring')
   })
 })
 
