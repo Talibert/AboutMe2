@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HomeHero from '@/components/home/HomeHero.vue'
+import CareerJourney from '@/components/home/CareerJourney.vue'
 import FeaturedProjects from '@/components/home/FeaturedProjects.vue'
 import AcademicCarousel from '@/components/home/AcademicCarousel.vue'
 </script>
@@ -8,6 +9,9 @@ import AcademicCarousel from '@/components/home/AcademicCarousel.vue'
   <div class="home-view">
     <!-- Hero Principal do Portfólio de Guilherme Taliberti -->
     <HomeHero />
+
+    <!-- Seção de Jornada Profissional & Marcos de Carreira -->
+    <CareerJourney />
 
     <!-- Seção de Projetos em Destaque -->
     <FeaturedProjects />

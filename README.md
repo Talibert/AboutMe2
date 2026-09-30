@@ -39,11 +39,11 @@ src/
 ├── components/           # Componentes reutilizáveis
 │   ├── common/           # Elementos da interface (BaseCarousel, IntroSplash, SectionHeader, botões)
 │   │   └── __tests__/    # Testes unitários e de comportamento dos componentes
-│   ├── home/             # Componentes da Home (HomeHero, FeaturedProjects, ProjectCard, AcademicCarousel, AcademicCard)
+│   ├── home/             # Componentes da Home (HomeHero, CareerJourney, FeaturedProjects, ProjectCard, AcademicCarousel, AcademicCard)
 │   ├── layout/           # Componentes estruturais (AppHeader, AppFooter)
 │   │   └── __tests__/    # Testes unitários do cabeçalho e rodapé
 ├── composables/          # Funções de lógica reutilizável (Composition API)
-├── data/                 # Catálogos estáticos, seeds e dados de fallback (projects.ts, academic.ts)
+├── data/                 # Catálogos estáticos, seeds e dados de fallback (projects.ts, academic.ts, career.ts)
 │   └── __tests__/        # Testes de integridade e consistência dos catálogos
 ├── layouts/              # Cascas visuais da aplicação
 │   ├── DefaultLayout.vue # Layout padrão (composto por AppHeader, slot central e AppFooter)
@@ -55,7 +55,9 @@ src/
 │   ├── index.ts          # Inicialização e registro de plugins do Pinia
 │   └── theme.ts          # Store de tema (claro, escuro ou sistema)
 ├── types/                # Definições de interfaces e modelos TypeScript
+│   ├── academic.ts       # Modelos da formação acadêmica e cursos técnicos
 │   ├── api.ts            # Tipagens de respostas e erros HTTP genéricos
+│   ├── career.ts         # Modelos de marcos de carreira e experiências profissionais
 │   ├── project.ts        # Modelos dos projetos em destaque e diagramas de arquitetura
 │   ├── router.d.ts       # Extensão de tipos dos metadados de rotas (RouteMeta)
 │   └── tech.ts           # Interface dos recursos e módulos tecnológicos
