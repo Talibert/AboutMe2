@@ -1,0 +1,14 @@
+{
+  "title": "EmployeeAvaliation - Avaliação de Desempenho",
+  "subtitle": "Sistema para acompanhamento de metas e feedback de equipes",
+  "description": "Aplicação voltada para gestão de recursos humanos e ciclo contínuo de avaliação de performance corporativa. Cadastro de métricas, pontuações e relatórios analíticos.",
+  "category": "Fullstack",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "PostgreSQL",
+    "REST API",
+    "Docker"
+  ],
+  "accentColor": "#fbbf24"
+}

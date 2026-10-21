@@ -1,0 +1,14 @@
+{
+  "title": "APIDuxus - API de Gestão de Equipes",
+  "subtitle": "Backend desenvolvido para o desafio técnico da Duxus",
+  "description": "API desenvolvida para cadastro e alocação de profissionais em times, cálculo de integrantes mais frequentes e relatórios de composição.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "PostgreSQL",
+    "JPA/Hibernate",
+    "REST API"
+  ],
+  "accentColor": "#10b981"
+}

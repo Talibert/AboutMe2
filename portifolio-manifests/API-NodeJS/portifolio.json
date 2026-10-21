@@ -1,0 +1,13 @@
+{
+  "title": "API-NodeJS - Serviços Backend em Node",
+  "subtitle": "Construção de APIs assíncronas com Node.js e Express",
+  "description": "API desenvolvida para explorar o ecossistema backend em JavaScript, roteamento REST e manipulação assíncrona de requisições.",
+  "category": "Backend",
+  "technologies": [
+    "Node.js",
+    "Express",
+    "JavaScript",
+    "REST API"
+  ],
+  "accentColor": "#22c55e"
+}

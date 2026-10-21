@@ -1,0 +1,17 @@
+{
+  "title": "BaseFront - Template de Frontend Moderno",
+  "subtitle": "Arquitetura SPA escalável com Vue 3, Vite & TypeScript",
+  "description": "Estrutura moderna de frontend desenvolvida como modelo de referência para projetos de alta performance. Adota Composition API com TypeScript estrito, gerenciamento de estado persistente com Pinia, roteamento com guards nativos e suíte abrangente de testes unitários (Vitest) e ponta a ponta (Playwright).",
+  "category": "Frontend",
+  "technologies": [
+    "Vue.js 3",
+    "TypeScript",
+    "Vite",
+    "Pinia",
+    "Playwright",
+    "Vitest",
+    "Axios",
+    "CSS Moderno"
+  ],
+  "accentColor": "#42b883"
+}

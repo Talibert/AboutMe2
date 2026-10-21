@@ -1,0 +1,14 @@
+{
+  "title": "Receiver - Mensageria com RabbitMQ",
+  "subtitle": "Consumo assíncrono de eventos e filas com Spring AMQP",
+  "description": "Projeto dedicado para consumir mensagens do broker RabbitMQ utilizando sistema de filas para comunicação distribuída.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "RabbitMQ",
+    "Docker",
+    "AMQP"
+  ],
+  "accentColor": "#f97316"
+}

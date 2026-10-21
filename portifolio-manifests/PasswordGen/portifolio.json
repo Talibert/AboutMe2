@@ -1,0 +1,12 @@
+{
+  "title": "PasswordGen - Gerador de Senhas em Java",
+  "subtitle": "Implementação em Java para treino de lógica e segurança",
+  "description": "Simples gerador de senhas criado em Java para consolidar conceitos de orientação a objetos, segurança e organização modular de código.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "POO",
+    "Algoritmos"
+  ],
+  "accentColor": "#ef4444"
+}

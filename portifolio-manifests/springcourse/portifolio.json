@@ -1,0 +1,13 @@
+{
+  "title": "springcourse - Práticas e Laboratório Spring Boot",
+  "subtitle": "Aprofundamento em JPA, Hibernate, DTOs e validações",
+  "description": "Repositório de exercícios práticos com Spring Boot, anotações de persistência relacional e tratamento padronizado de exceções.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "JPA/Hibernate",
+    "H2/PostgreSQL"
+  ],
+  "accentColor": "#14b8a6"
+}

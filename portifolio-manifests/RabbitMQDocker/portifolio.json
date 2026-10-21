@@ -1,0 +1,13 @@
+{
+  "title": "RabbitMQDocker - Infraestrutura de Mensageria",
+  "subtitle": "Cluster e container RabbitMQ com Docker Compose",
+  "description": "Ambiente conteinerizado para subir e gerenciar instâncias do RabbitMQ com painel de gerenciamento para testes locais de mensageria.",
+  "category": "Backend",
+  "technologies": [
+    "Docker",
+    "Docker Compose",
+    "RabbitMQ",
+    "DevOps"
+  ],
+  "accentColor": "#f59e0b"
+}

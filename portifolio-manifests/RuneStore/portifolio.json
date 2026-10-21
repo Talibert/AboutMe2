@@ -1,0 +1,16 @@
+{
+  "title": "RuneStore - Catálogo & E-commerce de Jogos",
+  "subtitle": "Sistema de vendas e gerenciamento de transações digitais",
+  "description": "Plataforma completa para controle de inventário, autenticação segura e fluxo de compras de itens virtuais. Desenvolvida com boas práticas de isolamento de domínio, persistência relacional com JPA/Hibernate e validações transacionais consistentes.",
+  "category": "Fullstack",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "Spring Security",
+    "Spring Data JPA",
+    "Hibernate",
+    "PostgreSQL / H2",
+    "REST APIs"
+  ],
+  "accentColor": "#38bdf8"
+}

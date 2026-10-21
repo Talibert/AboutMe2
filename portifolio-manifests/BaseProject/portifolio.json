@@ -1,0 +1,17 @@
+{
+  "title": "BaseProject - Arquitetura Limpa em Java",
+  "subtitle": "Template de microsserviços escalável com Clean Arch & Kafka",
+  "description": "Template robusto para microsserviços e aplicações empresariais em Java. Implementa Clean Architecture (independência de frameworks), mensageria com Apache Kafka para eventos assíncronos, conteinerização com Docker, migrações de banco com Flyway e pirâmide completa de testes automatizados.",
+  "category": "Backend",
+  "technologies": [
+    "Java 21",
+    "Spring Boot 3",
+    "Clean Architecture",
+    "Apache Kafka",
+    "Docker",
+    "Flyway",
+    "JUnit 5 & Mockito",
+    "PostgreSQL"
+  ],
+  "accentColor": "#f89820"
+}

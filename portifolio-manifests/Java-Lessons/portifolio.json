@@ -1,0 +1,12 @@
+{
+  "title": "Java-Lessons - Estudos e Algoritmos em Java",
+  "subtitle": "Exercícios práticos de lógica, POO e coleções",
+  "description": "Coleção de exercícios práticos explorando estruturas de dados, orientação a objetos e boas práticas em Java.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "POO",
+    "Estruturas de Dados"
+  ],
+  "accentColor": "#ea580c"
+}

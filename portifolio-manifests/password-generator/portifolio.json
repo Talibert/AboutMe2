@@ -1,0 +1,12 @@
+{
+  "title": "password-generator - Gerador Seguro de Senhas",
+  "subtitle": "Utilitário web para geração de senhas criptograficamente seguras",
+  "description": "Interface interativa com opções de comprimento, caracteres especiais, maiúsculas, minúsculas e medição de força de segurança.",
+  "category": "Frontend",
+  "technologies": [
+    "HTML5",
+    "CSS3",
+    "JavaScript"
+  ],
+  "accentColor": "#ec4899"
+}

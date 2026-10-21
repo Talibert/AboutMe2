@@ -1,0 +1,13 @@
+{
+  "title": "CourseProject - Plataforma de Cursos Clean Arch",
+  "subtitle": "Estruturação de domínio e serviços educacionais",
+  "description": "Plataforma para gerenciamento e matrícula de cursos com modelagem em Arquitetura Limpa e regras de negócio isoladas.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "Clean Architecture",
+    "REST API"
+  ],
+  "accentColor": "#a78bfa"
+}

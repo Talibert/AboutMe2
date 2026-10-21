@@ -1,0 +1,12 @@
+{
+  "title": "Portifolio - Primeira Versão Web",
+  "subtitle": "Portfólio com histórico de projetos e tecnologias",
+  "description": "Primeiro portfólio criado para expor projetos de estudos e trajetória inicial na carreira de tecnologia.",
+  "category": "Frontend",
+  "technologies": [
+    "JavaScript",
+    "HTML5",
+    "CSS3"
+  ],
+  "accentColor": "#eab308"
+}

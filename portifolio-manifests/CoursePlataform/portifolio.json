@@ -1,0 +1,15 @@
+{
+  "title": "CoursePlataform - Gestão de Cursos",
+  "subtitle": "Plataforma educacional com Clean Arch & APIs REST",
+  "description": "Plataforma para gestão e disponibilização de cursos com arquitetura desacoplada. Backend robusto em Java com Spring Boot, autenticação e regras de negócio isoladas.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "Clean Architecture",
+    "PostgreSQL",
+    "Docker",
+    "REST API"
+  ],
+  "accentColor": "#818cf8"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "apiCleanArch - Padrões de Arquitetura Limpa",
+  "subtitle": "Implementação de referência dos princípios de Clean Architecture",
+  "description": "API desenvolvida para explorar e consolidar os princípios de Clean Architecture propostos por Robert C. Martin. Isolamento absoluto das regras de domínio em relação a frameworks externos.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "Clean Architecture",
+    "SOLID",
+    "JUnit 5"
+  ],
+  "accentColor": "#34d399"
+}

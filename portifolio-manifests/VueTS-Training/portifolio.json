@@ -1,0 +1,12 @@
+{
+  "title": "VueTS-Training - Laboratório de Vue & TypeScript",
+  "subtitle": "Projetos e exercícios práticos de tipagem estrita no Vue",
+  "description": "Laboratório criado para consolidação de Composition API com script setup, tipagem forte de props, emits e gerenciamento de estado.",
+  "category": "Frontend",
+  "technologies": [
+    "Vue.js 3",
+    "TypeScript",
+    "Vite"
+  ],
+  "accentColor": "#3b82f6"
+}

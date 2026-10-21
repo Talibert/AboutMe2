@@ -1,0 +1,13 @@
+{
+  "title": "FrontEndDuxus - Interface de Composição de Times",
+  "subtitle": "Interface web para o desafio da empresa Duxus",
+  "description": "Frontend desenvolvido para gerenciamento interativo de equipes e visualização das composições geradas pela API.",
+  "category": "Frontend",
+  "technologies": [
+    "JavaScript",
+    "HTML5",
+    "CSS3",
+    "REST API"
+  ],
+  "accentColor": "#06b6d4"
+}

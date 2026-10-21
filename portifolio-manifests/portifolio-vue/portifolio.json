@@ -1,0 +1,13 @@
+{
+  "title": "portifolio-vue - Portfólio Inicial em Vue",
+  "subtitle": "Primeiros passos na criação de SPA com ecossistema Vue",
+  "description": "Portfólio explorando conceitos de reatividade do VueJS, componentes reutilizáveis e estilização moderna.",
+  "category": "Frontend",
+  "technologies": [
+    "Vue.js",
+    "JavaScript",
+    "CSS3",
+    "Vite"
+  ],
+  "accentColor": "#42b883"
+}

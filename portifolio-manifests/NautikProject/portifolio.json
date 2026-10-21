@@ -1,0 +1,14 @@
+{
+  "title": "NautikProject - API de Integração Comercial",
+  "subtitle": "Serviços REST desenvolvidos para a empresa Nautik",
+  "description": "API com persistência de dados comerciais, regras de validação transacional e endpoints para integração corporativa.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "PostgreSQL",
+    "REST API",
+    "Docker"
+  ],
+  "accentColor": "#3b82f6"
+}

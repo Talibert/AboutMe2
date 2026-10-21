@@ -1,0 +1,14 @@
+{
+  "title": "Sender - Produtor de Eventos RabbitMQ",
+  "subtitle": "Envio e despacho de mensagens para filas distribuídas",
+  "description": "Microsserviço responsável por publicar e despachar eventos para filas do RabbitMQ, garantindo entrega confiável de mensagens.",
+  "category": "Backend",
+  "technologies": [
+    "Java",
+    "Spring Boot",
+    "RabbitMQ",
+    "Docker",
+    "AMQP"
+  ],
+  "accentColor": "#fb923c"
+}

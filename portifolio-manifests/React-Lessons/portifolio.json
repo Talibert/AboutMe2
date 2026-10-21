@@ -1,0 +1,12 @@
+{
+  "title": "React-Lessons - Laboratório de React",
+  "subtitle": "Estudos e componentes desenvolvidos durante aulas de React",
+  "description": "Repositório contendo implementações práticas de hooks, componentes funcionais e renderização declarativa com React.",
+  "category": "Frontend",
+  "technologies": [
+    "ReactJS",
+    "JavaScript",
+    "Hooks"
+  ],
+  "accentColor": "#0ea5e9"
+}

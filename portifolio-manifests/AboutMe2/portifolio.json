@@ -1,0 +1,15 @@
+{
+  "title": "AboutMe2 - Portfólio Profissional Moderno",
+  "subtitle": "Aplicação SPA em Vue 3, TypeScript estrito, Pinia & Vitest",
+  "description": "Versão mais recente e avançada do portfólio de Guilherme Taliberti, com integração GitHub em tempo real, design responsivo com tema claro/escuro e suíte completa de testes.",
+  "category": "Frontend",
+  "technologies": [
+    "Vue.js 3",
+    "TypeScript",
+    "Vite",
+    "Pinia",
+    "Vitest",
+    "Playwright"
+  ],
+  "accentColor": "#42b883"
+}

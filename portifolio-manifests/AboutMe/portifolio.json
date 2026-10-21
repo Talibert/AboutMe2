@@ -1,0 +1,13 @@
+{
+  "title": "AboutMe - Portfólio & Perfil Profissional",
+  "subtitle": "Primeira versão do portfólio pessoal construído com React",
+  "description": "Página de apresentação desenvolvida em ReactJS para exibição de trajetória profissional, habilidades técnicas, artigos e repositórios de estudo.",
+  "category": "Frontend",
+  "technologies": [
+    "ReactJS",
+    "JavaScript",
+    "CSS Modules",
+    "Git"
+  ],
+  "accentColor": "#38bdf8"
+}
