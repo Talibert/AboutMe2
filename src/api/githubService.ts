@@ -230,81 +230,77 @@ export const githubService = {
       }
     }
 
-    try {
-      const headers: Record<string, string> = {
-        Accept: 'application/vnd.github.v3+json',
-      }
-      const token = import.meta.env.VITE_GITHUB_TOKEN
-      if (token) {
-        headers.Authorization = `Bearer ${token}`
-      }
-
-      const response = await axios.get<GitHubRepoDetails[]>(
-        `https://api.github.com/users/${owner}/repos?sort=updated&per_page=100`,
-        { headers },
-      )
-
-      const remoteRepos = response.data
-
-      if (Array.isArray(remoteRepos) && remoteRepos.length > 0) {
-        const validRepos = remoteRepos.filter(
-          (repo: GitHubRepoDetails & { fork?: boolean }) =>
-            !repo.fork && repo.name.toLowerCase() !== owner.toLowerCase(),
-        )
-
-        const mappedProjects: ProjectItem[] = await Promise.all(
-          validRepos.map(async (repo) => {
-            const branch = repo.default_branch || 'main'
-            const manifest = await this.getRepoPortfolioManifest(owner, repo.name, branch)
-
-            const category: ProjectItem['category'] = manifest?.category || 'Backend'
-            const technologies: string[] =
-              Array.isArray(manifest?.technologies) && manifest.technologies.length > 0
-                ? manifest.technologies
-                : ['Java']
-
-            return {
-              id: repo.name.toLowerCase(),
-              repoName: repo.name,
-              title: manifest?.title || repo.name,
-              subtitle:
-                manifest?.subtitle ||
-                (repo.language ? `Desenvolvido em ${repo.language}` : 'Desenvolvido em Java'),
-              description:
-                manifest?.description ||
-                repo.description ||
-                'Repositório público disponível no GitHub.',
-              technologies,
-              githubUrl: repo.html_url,
-              liveUrl: manifest?.liveUrl || repo.homepage || undefined,
-              accentColor: manifest?.accentColor || '#38bdf8',
-              category,
-              stars: repo.stargazers_count,
-              forks: repo.forks_count,
-              language: repo.language || 'Java',
-            }
-          }),
-        )
-
-        // Salva no sessionStorage para evitar queimar o rate limit de 60 reqs/hora
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-          try {
-            window.sessionStorage.setItem(
-              CACHE_KEY,
-              JSON.stringify({ timestamp: Date.now(), data: mappedProjects }),
-            )
-          } catch {
-            // Ignora falha de armazenamento de cache
-          }
-        }
-
-        return mappedProjects
-      }
-
-      return []
-    } catch {
-      return []
+    const headers: Record<string, string> = {
+      Accept: 'application/vnd.github.v3+json',
     }
+    const token = import.meta.env.VITE_GITHUB_TOKEN
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+
+    const response = await axios.get<GitHubRepoDetails[]>(
+      `https://api.github.com/users/${owner}/repos?sort=updated&per_page=100`,
+      { headers },
+    )
+
+    const remoteRepos = response.data
+
+    if (!Array.isArray(remoteRepos)) {
+      throw new Error('Resposta inválida da API do GitHub')
+    }
+
+    const validRepos = remoteRepos.filter(
+      (repo: GitHubRepoDetails & { fork?: boolean }) =>
+        !repo.fork && repo.name.toLowerCase() !== owner.toLowerCase(),
+    )
+
+    const mappedProjects: ProjectItem[] = await Promise.all(
+      validRepos.map(async (repo) => {
+        const branch = repo.default_branch || 'main'
+        const manifest = await this.getRepoPortfolioManifest(owner, repo.name, branch)
+
+        const category: ProjectItem['category'] = manifest?.category || 'Backend'
+        const technologies: string[] =
+          Array.isArray(manifest?.technologies) && manifest.technologies.length > 0
+            ? manifest.technologies
+            : ['Java']
+
+        return {
+          id: repo.name.toLowerCase(),
+          repoName: repo.name,
+          title: manifest?.title || repo.name,
+          subtitle:
+            manifest?.subtitle ||
+            (repo.language ? `Desenvolvido em ${repo.language}` : 'Desenvolvido em Java'),
+          description:
+            manifest?.description ||
+            repo.description ||
+            'Repositório público disponível no GitHub.',
+          technologies,
+          githubUrl: repo.html_url,
+          liveUrl: manifest?.liveUrl || repo.homepage || undefined,
+          accentColor: manifest?.accentColor || '#38bdf8',
+          category,
+          stars: repo.stargazers_count,
+          forks: repo.forks_count,
+          language: repo.language || 'Java',
+        }
+      }),
+    )
+
+    // Salva no sessionStorage para evitar queimar o rate limit de 60 reqs/hora
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      try {
+        window.sessionStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({ timestamp: Date.now(), data: mappedProjects }),
+        )
+      } catch {
+        // Ignora falha de armazenamento de cache
+      }
+    }
+
+    return mappedProjects
   },
 }
 

@@ -3,18 +3,23 @@ import { ref, computed, onMounted } from 'vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import CompactProjectCard from '@/components/projects/CompactProjectCard.vue'
 import ProjectCardSkeleton from '@/components/projects/ProjectCardSkeleton.vue'
+import ProjectsErrorState from '@/components/projects/ProjectsErrorState.vue'
 import { githubService } from '@/api/githubService'
 import type { ProjectItem } from '@/types/project'
 
 // Começa vazio para exibir os placeholders modernos enquanto aguarda a resposta da API
 const projects = ref<ProjectItem[]>([])
 const isLoading = ref(true)
+const hasError = ref(false)
 const searchQuery = ref('')
 const selectedCategory = ref<string>('Todos')
 
 const categories = ['Todos', 'Backend', 'Frontend', 'Fullstack'] as const
 
-onMounted(async () => {
+async function loadProjects(): Promise<void> {
+  isLoading.value = true
+  hasError.value = false
+
   try {
     // Delay artificial para permitir a visualização dos cards de esqueleto modernos
     const delayMs = import.meta.env.MODE === 'test' ? 0 : 1000
@@ -25,10 +30,15 @@ onMounted(async () => {
     projects.value = remoteProjects
   } catch (error) {
     console.warn('Falha ao sincronizar projetos com o GitHub:', error)
+    hasError.value = true
     projects.value = []
   } finally {
     isLoading.value = false
   }
+}
+
+onMounted(() => {
+  loadProjects()
 })
 
 const filteredProjects = computed(() => {
@@ -112,7 +122,7 @@ function clearFilters(): void {
       <span class="loading-pulse-dot" aria-hidden="true"></span>
       <span class="loading-text">Sincronizando repositórios com o GitHub...</span>
     </div>
-    <div v-else class="results-meta">
+    <div v-else-if="!hasError" class="results-meta">
       <span class="results-count">
         Exibindo <strong>{{ filteredProjects.length }}</strong> de
         <strong>{{ projects.length }}</strong> projetos
@@ -132,6 +142,9 @@ function clearFilters(): void {
       <ProjectCardSkeleton v-for="n in 6" :key="n" />
     </div>
 
+    <!-- Fallback de Erro quando a API do GitHub não responde -->
+    <ProjectsErrorState v-else-if="hasError" @retry="loadProjects" />
+
     <!-- Lista de Projetos (Grid Mac com 3 por linha) após carregamento -->
     <div v-else-if="filteredProjects.length > 0" class="projects-grid">
       <CompactProjectCard
@@ -141,7 +154,7 @@ function clearFilters(): void {
       />
     </div>
 
-    <!-- Estado Vazio (Sem resultados) -->
+    <!-- Estado Vazio (Sem resultados para o filtro) -->
     <div v-else class="empty-state">
       <span class="empty-icon" aria-hidden="true">📂</span>
       <h3 class="empty-title">Nenhum projeto encontrado</h3>

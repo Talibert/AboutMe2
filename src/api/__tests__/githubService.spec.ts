@@ -78,12 +78,10 @@ describe('Service: githubService', () => {
     expect(projects[0]?.title).toBe(DEFAULT_FEATURED_PROJECTS[0]?.title)
   })
 
-  it('4. Deve retornar lista vazia em getAllProjects caso a API do GitHub falhe', async () => {
+  it('4. Deve propagar erro em getAllProjects caso a API do GitHub não responda', async () => {
     vi.mocked(axios.get).mockRejectedValue(new Error('Rate limit'))
 
-    const projects = await githubService.getAllProjects('Talibert')
-
-    expect(projects).toEqual([])
+    await expect(githubService.getAllProjects('Talibert')).rejects.toThrow('Rate limit')
   })
 
   it('5. Deve montar os projetos via portifolio.json e aplicar fallback Backend + Java quando ausente', async () => {

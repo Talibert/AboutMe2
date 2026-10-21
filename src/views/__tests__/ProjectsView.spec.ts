@@ -99,13 +99,25 @@ describe('ProjectsView.vue', () => {
     expect(wrapper.find('.empty-title').text()).toContain('Nenhum projeto encontrado')
   })
 
-  it('6. Deve exibir estado vazio se a chamada à API falhar', async () => {
-    vi.spyOn(githubService, 'getAllProjects').mockRejectedValueOnce(new Error('Rate limit'))
+  it('6. Deve exibir o componente de fallback ProjectsErrorState se a chamada à API falhar e permitir tentar novamente', async () => {
+    const spy = vi
+      .spyOn(githubService, 'getAllProjects')
+      .mockRejectedValueOnce(new Error('Rate limit'))
+      .mockResolvedValueOnce(mockProjects)
 
     const wrapper = mount(ProjectsView)
     await flushPromises()
 
     expect(wrapper.findAll('.project-card').length).toBe(0)
-    expect(wrapper.find('.empty-state').exists()).toBe(true)
+    expect(wrapper.find('.error-state').exists()).toBe(true)
+    expect(wrapper.find('.error-title').text()).toContain('Não foi possível obter os projetos')
+
+    // Ao clicar em "Tentar novamente", deve refazer a chamada e exibir os projetos
+    await wrapper.find('.btn-retry').trigger('click')
+    await flushPromises()
+
+    expect(spy).toHaveBeenCalledTimes(2)
+    expect(wrapper.find('.error-state').exists()).toBe(false)
+    expect(wrapper.findAll('.project-card').length).toBe(mockProjects.length)
   })
 })
