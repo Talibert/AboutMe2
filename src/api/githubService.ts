@@ -13,10 +13,125 @@
 
 import axios from 'axios'
 import type { GitHubRepoDetails, PortfolioManifest, ProjectItem } from '@/types/project'
-import { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS } from '@/data/projects'
 
-// Re-exporta para compatibilidade com consumidores e testes existentes
-export { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS }
+export const DEFAULT_FEATURED_PROJECTS: ProjectItem[] = [
+  {
+    id: 'base-project',
+    repoName: 'BaseProject',
+    title: 'BaseProject - Arquitetura Limpa em Java',
+    subtitle: 'Template de microsserviços escalável com Clean Arch & Kafka',
+    description:
+      'Template robusto para microsserviços e aplicações empresariais em Java. Implementa Clean Architecture (independência de frameworks), mensageria com Apache Kafka para eventos assíncronos, conteinerização com Docker, migrações de banco com Flyway e pirâmide completa de testes automatizados.',
+    technologies: [
+      'Java 21',
+      'Spring Boot 3',
+      'Clean Architecture',
+      'Apache Kafka',
+      'Docker',
+      'Flyway',
+      'JUnit 5 & Mockito',
+      'PostgreSQL',
+    ],
+    githubUrl: 'https://github.com/Talibert/BaseProject',
+    accentColor: '#f89820',
+    category: 'Backend',
+    previewTheme: 'backend-architecture',
+    architectureDiagram: {
+      topLayer: {
+        icon: '☕',
+        name: 'Domain & Use Cases',
+        tag: 'Clean Arch',
+      },
+      flow: {
+        leftPill: 'Kafka Events',
+        rightPill: 'Flyway / Postgres',
+        arrow: '⇄',
+      },
+      bottomLayer: {
+        icon: '🐳',
+        name: 'Docker & Spring Boot 3',
+        tag: 'Infra & Cloud',
+      },
+    },
+  },
+  {
+    id: 'base-front',
+    repoName: 'BaseFront',
+    title: 'BaseFront - Template de Frontend Moderno',
+    subtitle: 'Arquitetura SPA escalável com Vue 3, Vite & TypeScript',
+    description:
+      'Estrutura moderna de frontend desenvolvida como modelo de referência para projetos de alta performance. Adota Composition API com TypeScript estrito, gerenciamento de estado persistente com Pinia, roteamento com guards nativos e suíte abrangente de testes unitários (Vitest) e ponta a ponta (Playwright).',
+    technologies: [
+      'Vue.js 3',
+      'TypeScript',
+      'Vite',
+      'Pinia',
+      'Playwright',
+      'Vitest',
+      'Axios',
+      'CSS Moderno',
+    ],
+    githubUrl: 'https://github.com/Talibert/BaseFront',
+    accentColor: '#42b883',
+    category: 'Frontend',
+    previewTheme: 'frontend-spa',
+    architectureDiagram: {
+      topLayer: {
+        icon: '⚡',
+        name: 'Vue 3 & Composition API',
+        tag: 'UI & Views',
+      },
+      flow: {
+        leftPill: 'Pinia (State)',
+        rightPill: 'Vue Router & Axios',
+        arrow: '⇄',
+      },
+      bottomLayer: {
+        icon: '🧪',
+        name: 'Vitest & Playwright E2E',
+        tag: 'Testes & CI',
+      },
+    },
+  },
+  {
+    id: 'rune-store',
+    repoName: 'RuneStore',
+    title: 'RuneStore - Catálogo & E-commerce de Jogos',
+    subtitle: 'Sistema de vendas e gerenciamento de transações digitais',
+    description:
+      'Plataforma completa para controle de inventário, autenticação segura e fluxo de compras de itens virtuais. Desenvolvida com boas práticas de isolamento de domínio, persistência relacional com JPA/Hibernate e validações transacionais consistentes.',
+    technologies: [
+      'Java',
+      'Spring Boot',
+      'Spring Security',
+      'Spring Data JPA',
+      'Hibernate',
+      'PostgreSQL / H2',
+      'REST APIs',
+    ],
+    githubUrl: 'https://github.com/Talibert/RuneStore',
+    accentColor: '#38bdf8',
+    category: 'Fullstack',
+    previewTheme: 'ecommerce-platform',
+    architectureDiagram: {
+      topLayer: {
+        icon: '🎮',
+        name: 'Catálogo & Inventário',
+        tag: 'REST API',
+      },
+      flow: {
+        leftPill: 'Spring Security (Auth)',
+        rightPill: 'Transações & Pedidos',
+        arrow: '⇄',
+      },
+      bottomLayer: {
+        icon: '🗄️',
+        name: 'Spring Data JPA & Hibernate',
+        tag: 'PostgreSQL',
+      },
+    },
+  },
+]
 
 const CACHE_KEY = 'talibert_github_repos_cache_v2'
 const CACHE_TTL_MS = 30 * 60 * 1000 // 30 minutos
@@ -186,9 +301,9 @@ export const githubService = {
         return mappedProjects
       }
 
-      return DEFAULT_ALL_PROJECTS
+      return []
     } catch {
-      return DEFAULT_ALL_PROJECTS
+      return []
     }
   },
 }

@@ -1,12 +1,49 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import ProjectsView from '../ProjectsView.vue'
-import { githubService, DEFAULT_ALL_PROJECTS } from '@/api/githubService'
+import { githubService } from '@/api/githubService'
+import type { ProjectItem } from '@/types/project'
+
+const mockProjects: ProjectItem[] = [
+  {
+    id: 'base-project',
+    repoName: 'BaseProject',
+    title: 'BaseProject - Arquitetura Limpa em Java',
+    subtitle: 'Template de microsserviços escalável',
+    description: 'Template robusto para microsserviços em Java.',
+    technologies: ['Java 21', 'Spring Boot 3', 'Kafka'],
+    githubUrl: 'https://github.com/Talibert/BaseProject',
+    accentColor: '#f89820',
+    category: 'Backend',
+  },
+  {
+    id: 'base-front',
+    repoName: 'BaseFront',
+    title: 'BaseFront - Template de Frontend Moderno',
+    subtitle: 'Arquitetura SPA escalável com Vue 3',
+    description: 'Estrutura moderna de frontend com Vue 3 e TypeScript.',
+    technologies: ['Vue.js 3', 'TypeScript', 'Pinia'],
+    githubUrl: 'https://github.com/Talibert/BaseFront',
+    accentColor: '#42b883',
+    category: 'Frontend',
+  },
+  {
+    id: 'rune-store',
+    repoName: 'RuneStore',
+    title: 'RuneStore - Catálogo & E-commerce de Jogos',
+    subtitle: 'Sistema de vendas digitais',
+    description: 'Plataforma completa para controle de inventário.',
+    technologies: ['Java', 'Spring Boot', 'PostgreSQL'],
+    githubUrl: 'https://github.com/Talibert/RuneStore',
+    accentColor: '#38bdf8',
+    category: 'Fullstack',
+  },
+]
 
 describe('ProjectsView.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.spyOn(githubService, 'getAllProjects').mockResolvedValue(DEFAULT_ALL_PROJECTS)
+    vi.spyOn(githubService, 'getAllProjects').mockResolvedValue(mockProjects)
   })
 
   it('1. Deve exibir placeholders modernos (skeletons) enquanto estiver carregando', () => {
@@ -23,7 +60,7 @@ describe('ProjectsView.vue', () => {
 
     expect(wrapper.find('h2').text()).toBe('Todos os Projetos')
     expect(wrapper.find('.loading-meta').exists()).toBe(false)
-    expect(wrapper.findAll('.project-card').length).toBe(DEFAULT_ALL_PROJECTS.length)
+    expect(wrapper.findAll('.project-card').length).toBe(mockProjects.length)
   })
 
   it('3. Deve filtrar projetos por categoria ao clicar nas abas', async () => {
@@ -35,7 +72,7 @@ describe('ProjectsView.vue', () => {
     expect(backendTab).toBeDefined()
     await backendTab?.trigger('click')
 
-    const backendCount = DEFAULT_ALL_PROJECTS.filter((p) => p.category === 'Backend').length
+    const backendCount = mockProjects.filter((p) => p.category === 'Backend').length
     expect(wrapper.findAll('.project-card').length).toBe(backendCount)
   })
 
@@ -62,12 +99,13 @@ describe('ProjectsView.vue', () => {
     expect(wrapper.find('.empty-title').text()).toContain('Nenhum projeto encontrado')
   })
 
-  it('6. Deve recorrer ao fallback DEFAULT_ALL_PROJECTS se a chamada à API falhar', async () => {
+  it('6. Deve exibir estado vazio se a chamada à API falhar', async () => {
     vi.spyOn(githubService, 'getAllProjects').mockRejectedValueOnce(new Error('Rate limit'))
 
     const wrapper = mount(ProjectsView)
     await flushPromises()
 
-    expect(wrapper.findAll('.project-card').length).toBe(DEFAULT_ALL_PROJECTS.length)
+    expect(wrapper.findAll('.project-card').length).toBe(0)
+    expect(wrapper.find('.empty-state').exists()).toBe(true)
   })
 })

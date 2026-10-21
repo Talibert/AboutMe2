@@ -4,7 +4,6 @@ import SectionHeader from '@/components/common/SectionHeader.vue'
 import CompactProjectCard from '@/components/projects/CompactProjectCard.vue'
 import ProjectCardSkeleton from '@/components/projects/ProjectCardSkeleton.vue'
 import { githubService } from '@/api/githubService'
-import { DEFAULT_ALL_PROJECTS } from '@/data/projects'
 import type { ProjectItem } from '@/types/project'
 
 // Começa vazio para exibir os placeholders modernos enquanto aguarda a resposta da API
@@ -17,20 +16,16 @@ const categories = ['Todos', 'Backend', 'Frontend', 'Fullstack'] as const
 
 onMounted(async () => {
   try {
-    // Delay artificial de 2 segundos para permitir a visualização dos cards de esqueleto modernos
+    // Delay artificial para permitir a visualização dos cards de esqueleto modernos
     const delayMs = import.meta.env.MODE === 'test' ? 0 : 1000
     if (delayMs > 0)
       await new Promise((resolve) => setTimeout(resolve, delayMs))
 
     const remoteProjects = await githubService.getAllProjects('Talibert')
-    if (remoteProjects && remoteProjects.length > 0) {
-      projects.value = remoteProjects
-    } else {
-      projects.value = DEFAULT_ALL_PROJECTS
-    }
+    projects.value = remoteProjects
   } catch (error) {
-    console.warn('Utilizando dados locais de fallback para todos os projetos:', error)
-    projects.value = DEFAULT_ALL_PROJECTS
+    console.warn('Falha ao sincronizar projetos com o GitHub:', error)
+    projects.value = []
   } finally {
     isLoading.value = false
   }

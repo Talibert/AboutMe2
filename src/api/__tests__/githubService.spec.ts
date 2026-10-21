@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
-import githubService, { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS } from '../githubService'
+import githubService, { DEFAULT_FEATURED_PROJECTS } from '../githubService'
 
 vi.mock('axios', () => ({
   default: {
@@ -78,14 +78,12 @@ describe('Service: githubService', () => {
     expect(projects[0]?.title).toBe(DEFAULT_FEATURED_PROJECTS[0]?.title)
   })
 
-  it('4. Deve retornar a lista completa de projetos com getAllProjects caso a API falhe', async () => {
+  it('4. Deve retornar lista vazia em getAllProjects caso a API do GitHub falhe', async () => {
     vi.mocked(axios.get).mockRejectedValue(new Error('Rate limit'))
 
     const projects = await githubService.getAllProjects('Talibert')
 
-    expect(projects).toHaveLength(DEFAULT_ALL_PROJECTS.length)
-    expect(projects.map((p) => p.id)).toContain('course-plataform')
-    expect(projects.map((p) => p.id)).toContain('api-clean-arch')
+    expect(projects).toEqual([])
   })
 
   it('5. Deve montar os projetos via portifolio.json e aplicar fallback Backend + Java quando ausente', async () => {
