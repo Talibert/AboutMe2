@@ -14,6 +14,20 @@ export interface GitHubRepoDetails {
 }
 
 /**
+ * Estrutura do arquivo `portifolio.json` na raiz de cada repositório no GitHub
+ * para enriquecimento 100% remoto dos CompactProjectCards.
+ */
+export interface PortfolioManifest {
+  title?: string
+  subtitle?: string
+  description?: string
+  category?: 'Backend' | 'Frontend' | 'Fullstack' | 'Sistemas Distribuídos'
+  technologies?: string[]
+  accentColor?: string
+  liveUrl?: string
+}
+
+/**
  * Camada estrutural do diagrama do projeto (ex: Domínio, Infra, UI, Persistência)
  */
 export interface ProjectDiagramLayer {

@@ -4,12 +4,12 @@
  *
  * Moldura inspirada nas janelas do macOS para exibição compacta em grid (3 por linha).
  *
- * ORIGEM DAS TECNOLOGIAS (props.project.technologies):
- * 1. Projetos com Curadoria Local: Cadastrados com tags manuais refinadas em DEFAULT_ALL_PROJECTS
- *    (ex: 'Java 21', 'Spring Boot 3', 'Clean Architecture', 'Apache Kafka', 'Docker').
- * 2. Repositórios Dinâmicos do GitHub: Gerados automaticamente pelo githubService a partir de:
- *    - repo.language: Linguagem predominante detectada pelo GitHub (ex: 'Java', 'Vue', 'TypeScript').
- *    - repo.topics: Tópicos/tags cadastrados no repositório no próprio GitHub (ex: 'docker', 'spring').
+ * ORIGEM DOS DADOS (props.project):
+ * 1. Arquivo `portifolio.json` na raiz de cada repositório no GitHub:
+ *    - Define `category` ('Backend' | 'Frontend' | 'Fullstack'), `technologies`, e opcionalmente `title` e `description`.
+ * 2. Fallback Automático via API do GitHub (quando o repositório não possui `portifolio.json`):
+ *    - `title` e `description` vêm diretamente de `repo.name` e `repo.description` da API do GitHub.
+ *    - `category` assume sempre `'Backend'` e `technologies` assume sempre `['Java']`.
  */
 import type { ProjectItem } from '@/types/project'
 

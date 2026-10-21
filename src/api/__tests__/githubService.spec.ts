@@ -11,6 +11,9 @@ vi.mock('axios', () => ({
 describe('Service: githubService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      window.sessionStorage.clear()
+    }
   })
 
   it('1. Deve consultar detalhes do repositório no endpoint do GitHub', async () => {
@@ -85,25 +88,26 @@ describe('Service: githubService', () => {
     expect(projects.map((p) => p.id)).toContain('api-clean-arch')
   })
 
-  it('5. Deve buscar repositórios dinamicamente do endpoint de repositórios do usuário', async () => {
+  it('5. Deve montar os projetos via portifolio.json e aplicar fallback Backend + Java quando ausente', async () => {
     const mockRemoteRepos = [
       {
-        name: 'BaseProject',
-        description: 'Descrição remota do BaseProject',
-        stargazers_count: 50,
-        forks_count: 10,
-        html_url: 'https://github.com/Talibert/BaseProject',
-        homepage: 'https://baseproject.demo',
+        name: 'AboutMe2',
+        description: 'Descrição padrão do GitHub para AboutMe2',
+        default_branch: 'main',
+        stargazers_count: 12,
+        forks_count: 2,
+        html_url: 'https://github.com/Talibert/AboutMe2',
+        homepage: 'https://talibert.dev',
         fork: false,
       },
       {
-        name: 'NovoRepoCriadoHoje',
-        description: 'Um novo repositório criado no GitHub',
-        language: 'Java',
-        topics: ['spring', 'clean-code'],
+        name: 'RepoSemPortifolioJson',
+        description: 'Descrição vinda direto da API do GitHub',
+        default_branch: 'main',
+        language: 'TypeScript',
         stargazers_count: 5,
         forks_count: 1,
-        html_url: 'https://github.com/Talibert/NovoRepoCriadoHoje',
+        html_url: 'https://github.com/Talibert/RepoSemPortifolioJson',
         fork: false,
       },
       {
@@ -113,7 +117,23 @@ describe('Service: githubService', () => {
       },
     ]
 
-    vi.mocked(axios.get).mockResolvedValueOnce({ data: mockRemoteRepos } as any)
+    vi.mocked(axios.get).mockImplementation((url: string) => {
+      if (url.includes('/users/Talibert/repos')) {
+        return Promise.resolve({ data: mockRemoteRepos } as any)
+      }
+      if (url.includes('raw.githubusercontent.com/Talibert/AboutMe2/main/portifolio.json')) {
+        return Promise.resolve({
+          data: {
+            title: 'AboutMe2 - Portfólio Profissional Moderno',
+            description: 'Versão mais recente do portfólio em Vue 3',
+            category: 'Frontend',
+            technologies: ['Vue.js 3', 'TypeScript', 'Pinia'],
+            accentColor: '#42b883',
+          },
+        } as any)
+      }
+      return Promise.reject(new Error('404 Not Found'))
+    })
 
     const projects = await githubService.getAllProjects('Talibert')
 
@@ -129,17 +149,21 @@ describe('Service: githubService', () => {
     // Apenas 2 repositórios (o fork é ignorado)
     expect(projects).toHaveLength(2)
 
-    // BaseProject deve ter mantido curadoria e atualizado stars
-    const baseProject = projects.find((p) => p.repoName === 'BaseProject')
-    expect(baseProject?.stars).toBe(50)
-    expect(baseProject?.category).toBe('Backend')
+    // 1. AboutMe2 deve ser preenchido pelo portifolio.json
+    const aboutMe2 = projects.find((p) => p.repoName === 'AboutMe2')
+    expect(aboutMe2?.title).toBe('AboutMe2 - Portfólio Profissional Moderno')
+    expect(aboutMe2?.description).toBe('Versão mais recente do portfólio em Vue 3')
+    expect(aboutMe2?.category).toBe('Frontend')
+    expect(aboutMe2?.technologies).toEqual(['Vue.js 3', 'TypeScript', 'Pinia'])
+    expect(aboutMe2?.stars).toBe(12)
 
-    // NovoRepoCriadoHoje deve ter sido gerado dinamicamente
-    const novoRepo = projects.find((p) => p.repoName === 'NovoRepoCriadoHoje')
-    expect(novoRepo?.title).toBe('NovoRepoCriadoHoje')
-    expect(novoRepo?.stars).toBe(5)
-    expect(novoRepo?.technologies).toContain('Java')
-    expect(novoRepo?.technologies).toContain('spring')
+    // 2. RepoSemPortifolioJson deve pegar título e descrição da API do GitHub e usar fallback Backend + Java
+    const repoSemJson = projects.find((p) => p.repoName === 'RepoSemPortifolioJson')
+    expect(repoSemJson?.title).toBe('RepoSemPortifolioJson')
+    expect(repoSemJson?.description).toBe('Descrição vinda direto da API do GitHub')
+    expect(repoSemJson?.category).toBe('Backend')
+    expect(repoSemJson?.technologies).toEqual(['Java'])
+    expect(repoSemJson?.stars).toBe(5)
   })
 })
 

@@ -12,13 +12,13 @@
  */
 
 import axios from 'axios'
-import type { GitHubRepoDetails, ProjectItem } from '@/types/project'
+import type { GitHubRepoDetails, PortfolioManifest, ProjectItem } from '@/types/project'
 import { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS } from '@/data/projects'
 
 // Re-exporta para compatibilidade com consumidores e testes existentes
 export { DEFAULT_FEATURED_PROJECTS, DEFAULT_ALL_PROJECTS }
 
-const CACHE_KEY = 'talibert_github_repos_cache'
+const CACHE_KEY = 'talibert_github_repos_cache_v2'
 const CACHE_TTL_MS = 30 * 60 * 1000 // 30 minutos
 
 export const githubService = {
@@ -41,6 +41,29 @@ export const githubService = {
       { headers },
     )
     return response.data
+  },
+
+  /**
+   * Busca o manifesto `portifolio.json` na raiz do repositório via raw.githubusercontent.com
+   * (não consome o rate limit de 60 req/hora da API REST do GitHub).
+   * Retorna `null` caso o repositório ainda não possua o arquivo.
+   */
+  async getRepoPortfolioManifest(
+    owner: string,
+    repo: string,
+    branch = 'main',
+  ): Promise<PortfolioManifest | null> {
+    try {
+      const response = await axios.get<PortfolioManifest>(
+        `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/portifolio.json`,
+      )
+      if (response.data && typeof response.data === 'object') {
+        return response.data
+      }
+      return null
+    } catch {
+      return null
+    }
   },
 
   /**
@@ -71,9 +94,10 @@ export const githubService = {
   },
 
   /**
-   * Retorna a lista completa de todos os projetos públicos do usuário no GitHub,
-   * combinando dados da API em tempo real com enriquecimento visual local,
-   * cache no sessionStorage e fallback completo em caso de falha de rede/rate limit.
+   * Retorna a lista completa de todos os projetos públicos do usuário no GitHub.
+   * - Nome (`title`) e `description` vêm da API do GitHub (podendo ser refinados pelo `portifolio.json`).
+   * - Categoria (`category`) e tecnologias (`technologies`) vêm do arquivo `portifolio.json` na raiz de cada repo.
+   * - Caso o repositório não possua `portifolio.json`, aplica o fallback padrão: `category: 'Backend'` e `technologies: ['Java']`.
    */
   async getAllProjects(owner = 'Talibert'): Promise<ProjectItem[]> {
     // 1. Tenta recuperar do cache de sessão se ainda for válido
@@ -100,7 +124,7 @@ export const githubService = {
         headers.Authorization = `Bearer ${token}`
       }
 
-      const response = await axios.get<any[]>(
+      const response = await axios.get<GitHubRepoDetails[]>(
         `https://api.github.com/users/${owner}/repos?sort=updated&per_page=100`,
         { headers },
       )
@@ -108,74 +132,44 @@ export const githubService = {
       const remoteRepos = response.data
 
       if (Array.isArray(remoteRepos) && remoteRepos.length > 0) {
-        const curatedMap = new Map<string, ProjectItem>(
-          DEFAULT_ALL_PROJECTS.map((p) => [p.repoName.toLowerCase(), p]),
+        const validRepos = remoteRepos.filter(
+          (repo: GitHubRepoDetails & { fork?: boolean }) =>
+            !repo.fork && repo.name.toLowerCase() !== owner.toLowerCase(),
         )
 
-        const mappedProjects: ProjectItem[] = remoteRepos
-          .filter((repo) => !repo.fork && repo.name.toLowerCase() !== 'talibert')
-          .map((repo) => {
-            const curated = curatedMap.get(repo.name.toLowerCase())
+        const mappedProjects: ProjectItem[] = await Promise.all(
+          validRepos.map(async (repo) => {
+            const branch = repo.default_branch || 'main'
+            const manifest = await this.getRepoPortfolioManifest(owner, repo.name, branch)
 
-            if (curated) {
-              return {
-                ...curated,
-                stars: repo.stargazers_count ?? curated.stars,
-                forks: repo.forks_count ?? curated.forks,
-                githubUrl: repo.html_url || curated.githubUrl,
-                liveUrl: repo.homepage || curated.liveUrl,
-                description: repo.description || curated.description,
-              }
-            }
-
-            const technologies: string[] = []
-            if (repo.language) technologies.push(repo.language)
-            if (Array.isArray(repo.topics)) {
-              repo.topics.forEach((t: string) => {
-                if (!technologies.includes(t)) technologies.push(t)
-              })
-            }
-            if (technologies.length === 0) technologies.push('Software')
-
-            let category: ProjectItem['category'] = 'Backend'
-            const lowerLang = (repo.language || '').toLowerCase()
-            const lowerDesc = (repo.description || '').toLowerCase()
-            const lowerName = repo.name.toLowerCase()
-
-            if (
-              lowerLang.includes('vue') ||
-              lowerLang.includes('react') ||
-              lowerLang.includes('html') ||
-              lowerLang.includes('css') ||
-              lowerLang.includes('typescript') ||
-              lowerDesc.includes('frontend') ||
-              lowerName.includes('front')
-            ) {
-              category = 'Frontend'
-            } else if (
-              lowerDesc.includes('fullstack') ||
-              lowerDesc.includes('e-commerce') ||
-              lowerDesc.includes('plataforma')
-            ) {
-              category = 'Fullstack'
-            }
+            const category: ProjectItem['category'] = manifest?.category || 'Backend'
+            const technologies: string[] =
+              Array.isArray(manifest?.technologies) && manifest.technologies.length > 0
+                ? manifest.technologies
+                : ['Java']
 
             return {
               id: repo.name.toLowerCase(),
               repoName: repo.name,
-              title: repo.name,
-              subtitle: repo.language ? `Desenvolvido em ${repo.language}` : 'Repositório GitHub',
-              description: repo.description || 'Repositório público disponível no GitHub.',
+              title: manifest?.title || repo.name,
+              subtitle:
+                manifest?.subtitle ||
+                (repo.language ? `Desenvolvido em ${repo.language}` : 'Desenvolvido em Java'),
+              description:
+                manifest?.description ||
+                repo.description ||
+                'Repositório público disponível no GitHub.',
               technologies,
               githubUrl: repo.html_url,
-              liveUrl: repo.homepage || undefined,
-              accentColor: '#38bdf8',
+              liveUrl: manifest?.liveUrl || repo.homepage || undefined,
+              accentColor: manifest?.accentColor || '#38bdf8',
               category,
               stars: repo.stargazers_count,
               forks: repo.forks_count,
-              language: repo.language || undefined,
+              language: repo.language || 'Java',
             }
-          })
+          }),
+        )
 
         // Salva no sessionStorage para evitar queimar o rate limit de 60 reqs/hora
         if (typeof window !== 'undefined' && window.sessionStorage) {
